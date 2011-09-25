@@ -5,3 +5,5 @@ nbproject/
 .settings
 .classpath
 .project
+build.xml
+manifest.mf
