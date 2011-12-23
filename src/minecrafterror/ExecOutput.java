@@ -11,7 +11,7 @@ public class ExecOutput implements Runnable {
 
     public void run() {
         String output = "";
-        MinecraftErrorView.SPAMDETECT = false;
+        //MinecraftErrorView.SPAMDETECT = false;
         jTextArea1.setText("Checking for Minecraft launcher (minecrafterr.jar) in "+System.getProperty("user.dir").toString()+"\n");
         File Launcher = new File("minecrafterr.jar");
         if(!Launcher.exists()){
@@ -47,7 +47,7 @@ public class ExecOutput implements Runnable {
         }catch(IOException e){
             jTextArea1.setText(jTextArea1.getText()+e.getMessage()+"\n");
         }
-        MinecraftErrorView.Output = output;
+        //MinecraftErrorView.Output = output;
         jTextArea1.setText(jTextArea1.getText()+"Error report complete, if your client failed to load press Paste Error and show that link to #Risucraft on esper.net.\n");
     }
 }
