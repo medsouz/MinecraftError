@@ -1,43 +1,71 @@
 package minecrafterror;
 
-import minecrafterror.resources.*;
+//import minecrafterror.resources.*;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.Toolkit;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 public class Main{
 	
 	//IMAGES//
 	public Image bg = Toolkit.getDefaultToolkit().getImage(
-			this.getClass().getResource("/Background.png"));
+			this.getClass().getResource("/minecrafterror/resources/Background.png"));
 	public Image bu1 = Toolkit.getDefaultToolkit().getImage(
-			this.getClass().getResource("/Button.png"));
+			this.getClass().getResource("/minecrafterror/resources/Button.png"));
 	public Image bu2 = Toolkit.getDefaultToolkit().getImage(
-			this.getClass().getResource("/Selected.png"));
+			this.getClass().getResource("/minecrafterror/resources/Selected.png"));
 	public Image bu3 = Toolkit.getDefaultToolkit().getImage(
-			this.getClass().getResource("/Pressed.png"));
+			this.getClass().getResource("/minecrafterror/resources/Pressed.png"));
 	public Image about = Toolkit.getDefaultToolkit().getImage(
-			this.getClass().getResource("/about.png"));
+			this.getClass().getResource("/minecrafterror/resources/about.png"));
 	public Image q = Toolkit.getDefaultToolkit().getImage(
-			this.getClass().getResource("/question.png"));
+			this.getClass().getResource("/minecrafterror/resources/question.png"));
 	public Image o = Toolkit.getDefaultToolkit().getImage(
-			this.getClass().getResource("/options.png"));
+			this.getClass().getResource("/minecrafterror/resources/options.png"));
 	public Image p = Toolkit.getDefaultToolkit().getImage(
-			this.getClass().getResource("/play.png"));
+			this.getClass().getResource("/minecrafterror/resources/play.png"));
 	public Image c = Toolkit.getDefaultToolkit().getImage(
-			this.getClass().getResource("/copy.png"));
+			this.getClass().getResource("/minecrafterror/resources/copy.png"));
 
 	public ImageIcon copy = new ImageIcon(c);
 	public ImageIcon play = new ImageIcon(p);
 	public ImageIcon options = new ImageIcon(o);
 	public ImageIcon question = new ImageIcon(q);
-	public ImageIcon aboat = new ImageIcon(about);
+	public ImageIcon aboat = new ImageIcon(about.getScaledInstance(60, 60, Image.SCALE_SMOOTH));
 	public ImageIcon but1 = new ImageIcon(bu1);
 	public ImageIcon but2 = new ImageIcon(bu2);
 	public ImageIcon but3 = new ImageIcon(bu3);
+	static String Output = "";
+	static boolean SPAMDETECT = false;
 	
 	//
 
@@ -61,14 +89,15 @@ public class Main{
 	}
 	
 	public JTextArea textBox = new JTextArea()	;
-	public JFrame frame = new JFrame("Minecraft Error");
+	public JFrame frame = new JFrame("MinecraftError");
 	public JLabel launch = new JLabel(but1);
 	public JLabel paste = new JLabel(but1);
 	public JMenuBar menu = new JMenuBar();
 	public Font Volt;
 			
 	public Main(){
-		InputStream in = getClass().getResourceAsStream("/VolterGoldfish.ttf");
+		
+		InputStream in = getClass().getResourceAsStream("/minecrafterror/resources/VolterGoldfish.ttf");
 		try {
 			Volt = Font.createFont(Font.TRUETYPE_FONT, in);
 		} catch (FontFormatException e) {
@@ -101,6 +130,9 @@ public class Main{
 			public void mousePressed(MouseEvent me) {
 				if (launch.isEnabled() == true) {
 					launch.setIcon(but3);
+			        ExecOutput mc = new ExecOutput(textBox);
+			        Thread t = new Thread(mc);
+			        t.start();
 					//Sound.CLICK.play();
 				}
 			}
@@ -128,6 +160,7 @@ public class Main{
 			public void mousePressed(MouseEvent me) {
 				if (paste.isEnabled() == true) {
 					paste.setIcon(but3);
+					pastebin();
 					//Sound.CLICK.play();
 				}
 			}
@@ -143,6 +176,13 @@ public class Main{
 		
 		JMenuItem Launch = new JMenuItem("Launch Minecraft", play);
 		File.add(Launch);
+		Launch.addMouseListener(new MouseAdapter(){
+			public void mousePressed(MouseEvent me) {
+		        ExecOutput mc = new ExecOutput(textBox);
+		        Thread t = new Thread(mc);
+		        t.start();
+			}
+		});
 		
 		JMenuItem Paste = new JMenuItem("Paste Error", copy);
 		File.add(Paste);
@@ -166,7 +206,7 @@ public class Main{
 		About.addMouseListener(new MouseAdapter(){
 			public void mousePressed(MouseEvent me) {
 				JOptionPane.showMessageDialog(frame,
-					    "Created by Medsouz for the sole purpose of easily logging Minecraft's outputs and errors.",
+					    "Created by medsouz for the sole purpose of easily logging Minecraft's outputs and errors.\nGUI created by Malqua.",
 					    "About",
 					    JOptionPane.QUESTION_MESSAGE,
 					    aboat);
@@ -183,12 +223,10 @@ public class Main{
 
 		textBox.setWrapStyleWord(true);
 		textBox.setLineWrap(true);
-		textBox.setHighlighter(null);
 		textBox.setCaretColor(null);
 		textBox.setForeground(Color.black);
 		textBox.setMargin(new Insets(5,5,5,0));
-		
-		//textBox.setEditable(false);
+		textBox.setEditable(false);
 		
 		launch.setSize(212, 40);
 		launch.setLocation(30, 420);
@@ -207,6 +245,7 @@ public class Main{
 		menu.add(File);
 		menu.add(Help);
 		
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/minecrafterror/resources/icon.png")));
 		frame.setLocationRelativeTo(null);
 		frame.setContentPane(new JLabel(new ImageIcon(bg)));
 		frame.setSize(600,555);
@@ -218,4 +257,50 @@ public class Main{
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
+    public void pastebin() {
+        if(!SPAMDETECT && !Output.isEmpty()){
+        SPAMDETECT = true;
+        Output = "Recorded by MinecraftError:\n"+Output;
+        textBox.setText(textBox.getText()+"Posting to pastebin.com...\n");
+
+        //Build parameter string
+        String data = "api_dev_key=00ee7bd5d711b33ec4c1386b32f8e945&api_option=paste&api_paste_code="+Output;
+        try {
+            // Send the request
+            URL url = new URL("http://pastebin.com/api/api_post.php");
+            URLConnection conn = url.openConnection();
+            conn.setDoOutput(true);
+            OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+
+            //write parameters
+            writer.write(data);
+            writer.flush();
+
+            // Get the response
+            StringBuffer answer = new StringBuffer();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                answer.append(line);
+            }
+            writer.close();
+            reader.close();
+
+            //Output the response
+            textBox.setText(textBox.getText()+answer.toString()+"\n");
+
+        } catch (MalformedURLException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        }else{
+        	if(Output.isEmpty()){
+        		textBox.setText(textBox.getText()+"It appears that there was no output, this can be caused if you still have Minecraft open when you pressed \"Paste Error\". Try closing Minecraft then try again.\n");
+        	}
+        	if(SPAMDETECT){
+        		textBox.setText(textBox.getText()+"Whoa! Calm down, it appears that you pressed \"Paste Error\" too many times! Please only press it once and then wait for the link to the pastebin to pop up. Thank you.\n");
+        	}
+        	}
+    }
 }
