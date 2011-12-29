@@ -43,12 +43,16 @@ public class ExecOutput implements Runnable {
         String line = "";
         while ((line = out.readLine()) != null || (line = outERR.readLine()) != null){
         output = output+line+"\n";
-        jTextArea1.setText(jTextArea1.getText()+line+"\n");}
+        jTextArea1.setText(jTextArea1.getText()+line+"\n");
+        jTextArea1.setCaretPosition(jTextArea1.getText().length() - 1);
+        }
         }catch(IOException e){
             jTextArea1.setText(jTextArea1.getText()+e.getMessage()+"\n");
+            jTextArea1.setCaretPosition(jTextArea1.getText().length() - 1);
         }
         Main.Output = output;
         Main.SPAMDETECT = false;
         jTextArea1.setText(jTextArea1.getText()+"Error report complete, if your client failed to load press Paste Error and show that link to #Risucraft on esper.net.\n");
+        jTextArea1.setCaretPosition(jTextArea1.getText().length() - 1);
     }
 }
