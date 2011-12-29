@@ -42,9 +42,11 @@ public class ExecOutput implements Runnable {
         BufferedReader outERR = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
         String line = "";
         while ((line = out.readLine()) != null || (line = outERR.readLine()) != null){
-        output = output+line+"\n";
-        jTextArea1.setText(jTextArea1.getText()+line+"\n");
-        jTextArea1.setCaretPosition(jTextArea1.getText().length() - 1);
+        	if(!line.startsWith("Setting user: ")){//doesn't show sessionid (can be used to temporarily hijack accounts and join servers with that user)
+                output = output+line+"\n";
+                jTextArea1.setText(jTextArea1.getText()+line+"\n");
+                jTextArea1.setCaretPosition(jTextArea1.getText().length() - 1);
+        	}
         }
         }catch(IOException e){
             jTextArea1.setText(jTextArea1.getText()+e.getMessage()+"\n");
