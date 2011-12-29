@@ -271,14 +271,14 @@ public class Main{
 		launch.setFont(VolterT);
 		
 		paste.setSize(212, 40);
-		paste.setLocation(350, 400);
+		paste.setLocation(350, 405);
 		paste.setHorizontalTextPosition(JLabel.CENTER);
 		paste.setText("Paste Error");
 		paste.setForeground(Color.white);
 		paste.setFont(VolterT);
 		
 		pasteML.setSize(232, 40);
-		pasteML.setLocation(340, 450);
+		pasteML.setLocation(340, 455);
 		pasteML.setHorizontalTextPosition(JLabel.CENTER);
 		pasteML.setText("Paste ModLoader.txt");
 		pasteML.setForeground(Color.white);
