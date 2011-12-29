@@ -10,7 +10,10 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -64,6 +67,9 @@ public class Main{
 	public ImageIcon but1 = new ImageIcon(bu1);
 	public ImageIcon but2 = new ImageIcon(bu2);
 	public ImageIcon but3 = new ImageIcon(bu3);
+	public ImageIcon but1b = new ImageIcon(bu1.getScaledInstance(232, 40, Image.SCALE_SMOOTH));
+	public ImageIcon but2b = new ImageIcon(bu2.getScaledInstance(232, 40, Image.SCALE_SMOOTH));
+	public ImageIcon but3b = new ImageIcon(bu3.getScaledInstance(232, 40, Image.SCALE_SMOOTH));
 	static String Output = "";
 	static boolean SPAMDETECT = false;
 	
@@ -92,6 +98,7 @@ public class Main{
 	public JFrame frame = new JFrame("MinecraftError");
 	public JLabel launch = new JLabel(but1);
 	public JLabel paste = new JLabel(but1);
+	public JLabel pasteML = new JLabel(but1b);
 	public JMenuBar menu = new JMenuBar();
 	public Font Volt;
 			
@@ -172,6 +179,34 @@ public class Main{
 			}
 		});
 		
+		pasteML.addMouseListener(new MouseAdapter(){
+			public void mouseExited(MouseEvent me){
+				if (pasteML.isEnabled() == true) {
+					pasteML.setIcon(but1b);
+				}
+			}		
+			
+			public void mouseEntered(MouseEvent me) {
+				if (pasteML.isEnabled() == true) {
+					pasteML.setIcon(but2b);
+					}
+			}
+
+			public void mousePressed(MouseEvent me) {
+				if (pasteML.isEnabled() == true) {
+					pasteML.setIcon(but3b);
+					pasteModLoaderOutput();
+					//Sound.CLICK.play();
+				}
+			}
+
+			public void mouseReleased(MouseEvent me) {
+				if (paste.isEnabled() == true) {
+					paste.setIcon(but2b);
+				}
+			}
+		});
+		
 		JMenu File = new JMenu("File");
 		
 		JMenuItem Launch = new JMenuItem("Launch Minecraft", play);
@@ -236,11 +271,18 @@ public class Main{
 		launch.setFont(VolterT);
 		
 		paste.setSize(212, 40);
-		paste.setLocation(350, 420);
+		paste.setLocation(350, 400);
 		paste.setHorizontalTextPosition(JLabel.CENTER);
 		paste.setText("Paste Error");
 		paste.setForeground(Color.white);
 		paste.setFont(VolterT);
+		
+		pasteML.setSize(232, 40);
+		pasteML.setLocation(340, 450);
+		pasteML.setHorizontalTextPosition(JLabel.CENTER);
+		pasteML.setText("Paste ModLoader.txt");
+		pasteML.setForeground(Color.white);
+		pasteML.setFont(VolterT);
 		
 		menu.add(File);
 		menu.add(Help);
@@ -251,6 +293,7 @@ public class Main{
 		frame.setSize(600,555);
 		frame.setResizable(false);
 		frame.add(paste);
+		frame.add(pasteML);
 		frame.add(launch);
 		frame.add(scroll);
 		frame.setJMenuBar(menu);
@@ -260,7 +303,7 @@ public class Main{
     public void pastebin() {
         if(!SPAMDETECT && !Output.isEmpty()){
         SPAMDETECT = true;
-        Output = "Recorded by MinecraftError:\n"+Output;
+        Output = "Recorded by MinecraftError (https://github.com/medsouz/MinecraftError):\n"+Output;
         textBox.setText(textBox.getText()+"Posting to pastebin.com...\n");
 
         //Build parameter string
@@ -302,5 +345,53 @@ public class Main{
         		textBox.setText(textBox.getText()+"Whoa! Calm down, it appears that you pressed \"Paste Error\" too many times! Please only press it once and then wait for the link to the pastebin to pop up. Thank you.\n");
         	}
         	}
+    }
+    
+    public void pasteModLoaderOutput(){
+    	String os = System.getProperty("os.name").toLowerCase();
+    	String modLoaderPath = "";
+    	String contents = "Recorded by MinecraftError (https://github.com/medsouz/MinecraftError):\n";
+    	if(os.startsWith("mac")){
+    		System.out.println("Mac user!");
+    		modLoaderPath = System.getProperty("user.home")+"/Library/Application Support/minecraft/ModLoader.txt";
+    	}
+    	if(os.contains("nix") || os.contains("nux") || os.contains("solaris")){
+    		System.out.println("Linux/Unix/Solaris user!");
+    		modLoaderPath = System.getProperty("user.home")+"/.minecraft/ModLoader.txt";
+    	}
+    	if(os.startsWith("win")){
+    		System.out.println("Windows user!");
+    		modLoaderPath = System.getenv("APPDATA")+"/.minecraft/ModLoader.txt";
+    	}
+    	try{
+    		byte[] b = new byte[(int) new File(modLoaderPath).length()];
+    		BufferedInputStream f = new BufferedInputStream(new FileInputStream(modLoaderPath));
+    		f.read(b);
+    		contents = contents + new String(b);
+    		f.close();
+    		//one last check to make sure everything worked
+    		if(modLoaderPath.equals("") || contents.equals("")){
+    			System.out.println("failed");
+    			return;
+    		}
+        	URL url = new URL("http://pastebin.com/api/api_post.php");
+        	URLConnection conn = url.openConnection();
+        	conn.setDoOutput(true);
+        	OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+            writer.write("api_dev_key=00ee7bd5d711b33ec4c1386b32f8e945&api_option=paste&api_paste_code="+contents);
+            writer.flush();
+            StringBuffer answer = new StringBuffer();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                answer.append(line);
+            }
+            writer.close();
+            reader.close();
+            textBox.setText(textBox.getText()+answer.toString()+"\n");
+    	}catch(Exception Err){
+    		System.out.println(Err.getMessage());
+    		return;
+    	}
     }
 }
