@@ -8,7 +8,7 @@ public class ExecOutput implements Runnable {
     public ExecOutput(javax.swing.JTextArea Output) {
         jTextArea1 = Output;
     }
-
+    @Override
     public void run() {
         String output = "";
         jTextArea1.setText("Checking for Minecraft launcher (minecrafterr.jar) in "+System.getProperty("user.dir").toString()+"\n");
