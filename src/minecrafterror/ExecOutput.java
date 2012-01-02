@@ -38,20 +38,23 @@ public class ExecOutput implements Runnable {
         jTextArea1.setText(jTextArea1.getText()+"Minecraft launcher found!"+"\n");
         jTextArea1.setText(jTextArea1.getText()+"Starting launcher..."+"\n");
         try{
-        System.out.println(System.getProperty("os.name"));
-        // Run launcher in new process
-        Process pr = Runtime.getRuntime().exec(System.getProperty("java.home")+"/bin/java -Ddebug=full -cp minecrafterr.jar net.minecraft.LauncherFrame");
-        // Grab output
-        BufferedReader out = new BufferedReader(new InputStreamReader(pr.getInputStream()));
-        BufferedReader outERR = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
-        String line = "";
-        while ((line = out.readLine()) != null || (line = outERR.readLine()) != null){
-        	if(!line.startsWith("Setting user: ")){//doesn't show sessionid (can be used to temporarily hijack accounts and join servers with that user)
-                output = output+line+"\n";
-                jTextArea1.setText(jTextArea1.getText()+line+"\n");
-                jTextArea1.setCaretPosition(jTextArea1.getText().length() - 1);
-        	}
-        }
+            System.out.println(System.getProperty("os.name"));
+            // Run launcher in new process
+            Process pr = Runtime.getRuntime().exec(System.getProperty("java.home")+"/bin/java -Ddebug=full -cp minecrafterr.jar net.minecraft.LauncherFrame");
+            // Grab output
+            BufferedReader out = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+            BufferedReader outERR = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
+            String line = "";
+            int spam = 0;
+            while ((line = out.readLine()) != null || (line = outERR.readLine()) != null)
+            {
+                if(!line.startsWith("Setting user: "))
+                {//doesn't show sessionid (can be used to temporarily hijack accounts and join servers with that user)
+                    output = output+line+"\n";
+                    jTextArea1.setText(jTextArea1.getText()+line+"\n");
+                    jTextArea1.setCaretPosition(jTextArea1.getText().length() - 1);
+                }
+            }
         }catch(IOException e){
             jTextArea1.setText(jTextArea1.getText()+e.getMessage()+"\n");
             jTextArea1.setCaretPosition(jTextArea1.getText().length() - 1);

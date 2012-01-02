@@ -88,7 +88,7 @@ public class Main{
 			e.printStackTrace();
 		}
 		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
+			@Override public void run() {
 				new Main();
 			}
 		});
@@ -99,6 +99,7 @@ public class Main{
 	public JLabel launch = new JLabel(but1);
 	public JLabel paste = new JLabel(but1);
 	public JLabel pasteML = new JLabel(but1b);
+        public JLabel analyze = new JLabel(but1);
 	public JMenuBar menu = new JMenuBar();
 	public Font Volt;
 			
@@ -216,6 +217,37 @@ public class Main{
 				}
 			}
 		});
+		paste.addMouseListener(new MouseAdapter(){
+			@Override
+                        public void mouseExited(MouseEvent me){
+                            	if (paste.isEnabled() == true) {
+					paste.setIcon(but1);
+				}
+			}		
+			
+                        @Override
+			public void mouseEntered(MouseEvent me) {
+				if (paste.isEnabled() == true) {
+					paste.setIcon(but2);
+					}
+			}
+
+                        @Override
+			public void mousePressed(MouseEvent me) {
+				if (paste.isEnabled() == true) {
+					paste.setIcon(but3);
+					analyze();
+					//Sound.CLICK.play();
+				}
+			}
+
+                        @Override
+			public void mouseReleased(MouseEvent me) {
+				if (paste.isEnabled() == true) {
+					paste.setIcon(but2);
+				}
+			}
+		});
 		
 		JMenu File = new JMenu("File");
 		
@@ -262,7 +294,7 @@ public class Main{
 		});
 		
 		JScrollPane scroll = new JScrollPane();
-		scroll.setBounds(0,0,580,380);
+		scroll.setBounds(0,0,580,330);
 		scroll.setViewportView(textBox);
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -277,25 +309,32 @@ public class Main{
 		textBox.setEditable(false);
 		
 		launch.setSize(212, 40);
-		launch.setLocation(30, 420);
+		launch.setLocation(30, 410);
 		launch.setHorizontalTextPosition(JLabel.CENTER);
 		launch.setText("Launch Minecraft");
 		launch.setForeground(Color.white);
 		launch.setFont(VolterT);
 		
 		paste.setSize(212, 40);
-		paste.setLocation(350, 405);
+		paste.setLocation(350, 365);
 		paste.setHorizontalTextPosition(JLabel.CENTER);
 		paste.setText("Paste Error");
 		paste.setForeground(Color.white);
 		paste.setFont(VolterT);
 		
 		pasteML.setSize(232, 40);
-		pasteML.setLocation(340, 455);
+		pasteML.setLocation(340, 410);
 		pasteML.setHorizontalTextPosition(JLabel.CENTER);
 		pasteML.setText("Paste ModLoader.txt");
 		pasteML.setForeground(Color.white);
 		pasteML.setFont(VolterT);
+
+                analyze.setSize(232, 40);
+		analyze.setLocation(340, 455);
+		analyze.setHorizontalTextPosition(JLabel.CENTER);
+		analyze.setText("Analyze Error");
+		analyze.setForeground(Color.white);
+		analyze.setFont(VolterT);
 		
 		menu.add(File);
 		menu.add(Help);
@@ -309,6 +348,7 @@ public class Main{
 		frame.add(pasteML);
 		frame.add(launch);
 		frame.add(scroll);
+                frame.add(analyze);
 		frame.setJMenuBar(menu);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -406,5 +446,9 @@ public class Main{
     		System.out.println(Err.getMessage());
     		return;
     	}
+    }
+    public void analyze()
+    {
+        
     }
 }
