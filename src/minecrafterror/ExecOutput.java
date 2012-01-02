@@ -11,6 +11,7 @@ public class ExecOutput implements Runnable {
     @Override
     public void run() {
         String output = "";
+        // Get launcher jar
         jTextArea1.setText("Checking for Minecraft launcher (minecrafterr.jar) in "+System.getProperty("user.dir").toString()+"\n");
         File Launcher = new File("minecrafterr.jar");
         if(!Launcher.exists()){
@@ -33,11 +34,14 @@ public class ExecOutput implements Runnable {
             }
             jTextArea1.setText(jTextArea1.getText()+"Download successful!"+"\n");
         }
+        // Got launcher. 
         jTextArea1.setText(jTextArea1.getText()+"Minecraft launcher found!"+"\n");
         jTextArea1.setText(jTextArea1.getText()+"Starting launcher..."+"\n");
         try{
         System.out.println(System.getProperty("os.name"));
+        // Run launcher in new process
         Process pr = Runtime.getRuntime().exec(System.getProperty("java.home")+"/bin/java -Ddebug=full -cp minecrafterr.jar net.minecraft.LauncherFrame");
+        // Grab output
         BufferedReader out = new BufferedReader(new InputStreamReader(pr.getInputStream()));
         BufferedReader outERR = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
         String line = "";
@@ -52,6 +56,7 @@ public class ExecOutput implements Runnable {
             jTextArea1.setText(jTextArea1.getText()+e.getMessage()+"\n");
             jTextArea1.setCaretPosition(jTextArea1.getText().length() - 1);
         }
+        // set output
         Main.Output = output;
         Main.SPAMDETECT = false;
         jTextArea1.setText(jTextArea1.getText()+"Error report complete, if your client failed to load press Paste Error and show that link to #Risucraft on esper.net.\n");
