@@ -102,7 +102,8 @@ public class Main{
 	public JMenuBar menu = new JMenuBar();
 	public Font Volt;
 			
-	public Main(){
+	public Main()
+        {
 		
 		InputStream in = getClass().getResourceAsStream("/minecrafterror/resources/VolterGoldfish.ttf");
 		try {
@@ -122,18 +123,19 @@ public class Main{
 		
 		
 		launch.addMouseListener(new MouseAdapter(){
+                        @Override
 			public void mouseExited(MouseEvent me){
 				if (launch.isEnabled() == true) {
 					launch.setIcon(but1);
 				}
 			}		
-			
+			@Override
 			public void mouseEntered(MouseEvent me) {
 				if (launch.isEnabled() == true) {
 					launch.setIcon(but2);
 					}
 			}
-
+                        @Override
 			public void mousePressed(MouseEvent me) {
 				if (launch.isEnabled() == true) {
 					launch.setIcon(but3);
@@ -143,7 +145,7 @@ public class Main{
 					//Sound.CLICK.play();
 				}
 			}
-
+                        @Override
 			public void mouseReleased(MouseEvent me) {
 				if (launch.isEnabled() == true) {
 					launch.setIcon(but2);
@@ -152,18 +154,21 @@ public class Main{
 		});
 		
 		paste.addMouseListener(new MouseAdapter(){
-			public void mouseExited(MouseEvent me){
-				if (paste.isEnabled() == true) {
+			@Override
+                        public void mouseExited(MouseEvent me){
+                            	if (paste.isEnabled() == true) {
 					paste.setIcon(but1);
 				}
 			}		
 			
+                        @Override
 			public void mouseEntered(MouseEvent me) {
 				if (paste.isEnabled() == true) {
 					paste.setIcon(but2);
 					}
 			}
 
+                        @Override
 			public void mousePressed(MouseEvent me) {
 				if (paste.isEnabled() == true) {
 					paste.setIcon(but3);
@@ -172,6 +177,7 @@ public class Main{
 				}
 			}
 
+                        @Override
 			public void mouseReleased(MouseEvent me) {
 				if (paste.isEnabled() == true) {
 					paste.setIcon(but2);
@@ -180,18 +186,21 @@ public class Main{
 		});
 		
 		pasteML.addMouseListener(new MouseAdapter(){
+                        @Override
 			public void mouseExited(MouseEvent me){
 				if (pasteML.isEnabled() == true) {
 					pasteML.setIcon(but1b);
 				}
 			}		
 			
+                        @Override
 			public void mouseEntered(MouseEvent me) {
 				if (pasteML.isEnabled() == true) {
 					pasteML.setIcon(but2b);
 					}
 			}
 
+                        @Override
 			public void mousePressed(MouseEvent me) {
 				if (pasteML.isEnabled() == true) {
 					pasteML.setIcon(but3b);
@@ -200,6 +209,7 @@ public class Main{
 				}
 			}
 
+                        @Override
 			public void mouseReleased(MouseEvent me) {
 				if (paste.isEnabled() == true) {
 					paste.setIcon(but2b);
@@ -212,6 +222,7 @@ public class Main{
 		JMenuItem Launch = new JMenuItem("Launch Minecraft", play);
 		File.add(Launch);
 		Launch.addMouseListener(new MouseAdapter(){
+                    @Override
 			public void mousePressed(MouseEvent me) {
 		        ExecOutput mc = new ExecOutput(textBox);
 		        Thread t = new Thread(mc);
@@ -229,6 +240,7 @@ public class Main{
 		JMenuItem Exit = new JMenuItem("Exit");
 		File.add(Exit);
 		Exit.addMouseListener(new MouseAdapter(){
+                    @Override
 			public void mousePressed(MouseEvent me) {
 				frame.dispose();
 			}
@@ -239,6 +251,7 @@ public class Main{
 		JMenuItem About = new JMenuItem("About", question);
 		Help.add(About);
 		About.addMouseListener(new MouseAdapter(){
+                    @Override
 			public void mousePressed(MouseEvent me) {
 				JOptionPane.showMessageDialog(frame,
 					    "Created by medsouz for the sole purpose of easily logging Minecraft's outputs and errors.\nGUI created by Malqua.",
@@ -320,7 +333,7 @@ public class Main{
             writer.flush();
 
             // Get the response
-            StringBuffer answer = new StringBuffer();
+            StringBuilder answer = new StringBuilder();
             BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String line;
             while ((line = reader.readLine()) != null) {
@@ -380,7 +393,7 @@ public class Main{
         	OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
             writer.write("api_dev_key=00ee7bd5d711b33ec4c1386b32f8e945&api_option=paste&api_paste_code="+contents);
             writer.flush();
-            StringBuffer answer = new StringBuffer();
+            StringBuilder answer = new StringBuilder();
             BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String line;
             while ((line = reader.readLine()) != null) {
