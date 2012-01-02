@@ -45,7 +45,6 @@ public class ExecOutput implements Runnable {
             BufferedReader out = new BufferedReader(new InputStreamReader(pr.getInputStream()));
             BufferedReader outERR = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
             String line = "";
-            int spam = 0;
             while ((line = out.readLine()) != null || (line = outERR.readLine()) != null)
             {
                 if(!line.startsWith("Setting user: "))
