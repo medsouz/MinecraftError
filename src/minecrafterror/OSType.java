@@ -14,6 +14,7 @@ public enum OSType {
     OS_X(2), LION(2),
     UBUNTU(3), SOLARIS(3);
     
+    // The category is so that we can do generic comparisons
     int category;
     private OSType(int i)
     {
@@ -22,5 +23,17 @@ public enum OSType {
     public boolean equals(OSType other)
     {
         return category == other.category;
+    }
+    public boolean isWindows()
+    {
+        return category==1;
+    }
+    public boolean isMac()
+    {
+        return category==2;
+    }
+    public boolean isLinux()
+    {
+        return category==3;
     }
 }

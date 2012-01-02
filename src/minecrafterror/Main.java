@@ -92,6 +92,7 @@ public class Main{
 				new Main();
 			}
 		});
+                setOS();
 	}
 	
 	public JTextArea textBox = new JTextArea()	;
@@ -102,6 +103,8 @@ public class Main{
         public JLabel analyze = new JLabel(but1);
 	public JMenuBar menu = new JMenuBar();
 	public Font Volt;
+        
+        public OSType currentOS;
 			
 	public Main()
         {
@@ -353,43 +356,56 @@ public class Main{
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
-    public void pastebin() {
-        if(!SPAMDETECT && !Output.isEmpty()){
-        SPAMDETECT = true;
-        Output = "Recorded by MinecraftError (https://github.com/medsouz/MinecraftError):\n"+Output;
-        textBox.setText(textBox.getText()+"Posting to pastebin.com...\n");
-
-        //Build parameter string
-        String data = "api_dev_key=00ee7bd5d711b33ec4c1386b32f8e945&api_option=paste&api_paste_code="+Output;
-        try {
-            // Send the request
-            URL url = new URL("http://pastebin.com/api/api_post.php");
-            URLConnection conn = url.openConnection();
-            conn.setDoOutput(true);
-            OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
-
-            //write parameters
-            writer.write(data);
-            writer.flush();
-
-            // Get the response
-            StringBuilder answer = new StringBuilder();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                answer.append(line);
-            }
-            writer.close();
-            reader.close();
-
-            //Output the response
-            textBox.setText(textBox.getText()+answer.toString()+"\n");
-
-        } catch (MalformedURLException ex) {
-            ex.printStackTrace();
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        public void setOS()
+        {
+            String os = System.getProperty("os.name").toLowerCase();
+            if(os.startsWith("win"))
+                currentOS = OSType.WINDOWS;
+            else if(os.startsWith("mac"))
+                currentOS = OSType.MAC;
+            else if(os.contains("nix") || os.contains("nux"))
+                currentOS = OSType.LINUX;
+            else if(os.contains("solaris"))
+                currentOS = OSType.SOLARIS;
         }
+    public void pastebin() {
+        if(!SPAMDETECT && !Output.isEmpty())
+        {
+            SPAMDETECT = true;
+            Output = "Recorded by MinecraftError (https://github.com/medsouz/MinecraftError):\n"+Output;
+            textBox.setText(textBox.getText()+"Posting to pastebin.com...\n");
+
+            //Build parameter string
+            String data = "api_dev_key=00ee7bd5d711b33ec4c1386b32f8e945&api_option=paste&api_paste_code="+Output;
+            try {
+                // Send the request
+                URL url = new URL("http://pastebin.com/api/api_post.php");
+                URLConnection conn = url.openConnection();
+                conn.setDoOutput(true);
+                OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+
+                //write parameters
+                writer.write(data);
+                writer.flush();
+
+                // Get the response
+                StringBuilder answer = new StringBuilder();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    answer.append(line);
+                }
+                writer.close();
+                reader.close();
+
+                //Output the response
+                textBox.setText(textBox.getText()+answer.toString()+"\n");
+
+            } catch (MalformedURLException ex) {
+                ex.printStackTrace();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }else{
         	if(Output.isEmpty()){
         		textBox.setText(textBox.getText()+"It appears that there was no output, this can be caused if you still have Minecraft open when you pressed \"Paste Error\". Try closing Minecraft then try again.\n");
@@ -397,22 +413,22 @@ public class Main{
         	if(SPAMDETECT){
         		textBox.setText(textBox.getText()+"Whoa! Calm down, it appears that you pressed \"Paste Error\" too many times! Please only press it once and then wait for the link to the pastebin to pop up. Thank you.\n");
         	}
-        	}
+        }
     }
     
-    public void pasteModLoaderOutput(){
-    	String os = System.getProperty("os.name").toLowerCase();
+    public void pasteModLoaderOutput()
+    {
     	String modLoaderPath = "";
     	String contents = "Recorded by MinecraftError (https://github.com/medsouz/MinecraftError):\n";
-    	if(os.startsWith("mac")){
+    	if(currentOS.isMac()){
     		System.out.println("Mac user!");
     		modLoaderPath = System.getProperty("user.home")+"/Library/Application Support/minecraft/ModLoader.txt";
     	}
-    	if(os.contains("nix") || os.contains("nux") || os.contains("solaris")){
+    	if(currentOS.isLinux()){
     		System.out.println("Linux/Unix/Solaris user!");
     		modLoaderPath = System.getProperty("user.home")+"/.minecraft/ModLoader.txt";
     	}
-    	if(os.startsWith("win")){
+    	if(currentOS.isWindows()){
     		System.out.println("Windows user!");
     		modLoaderPath = System.getenv("APPDATA")+"/.minecraft/ModLoader.txt";
     	}
@@ -449,6 +465,55 @@ public class Main{
     }
     public void analyze()
     {
-        
+        if(!SPAMDETECT && !Output.isEmpty())
+        {
+            String reason = "";
+            if(Output.contains("java.lang.VerifyError")
+                    || Output.contains("java.lang.IncompatibleClassChangeError")
+                    || Output.contains("java.lang.NoSuchFieldError")
+                    || Output.contains("java.lang.NoSuchMethodError")
+                    )
+            {
+                reason = "A mod has the wrong minecraft version. NOTE: You may have to check your mods folder.";
+            }
+            else if(Output.contains("java.lang.StackOverflowError"))
+            {
+                reason = "Minecraft had an infinite loop. God help you if you were not testing a mod.";
+            }
+            else if(Output.contains("EXCEPTION_ACCESS_VIOLATION") || Output.contains("SIGSEGV"))
+            {
+                
+                if(currentOS.isLinux())
+                {
+                    reason = "Segmentation fault. Try disabling the FGLRX drivers.";
+                }
+                else
+                {
+                    reason = "Segmentation fault. Check your graphics drivers.";
+                }
+            }
+            else if(Output.contains("java.lang.NoClassDefFoundError"))
+            {
+                int pos =Output.indexOf("java.lang.NoClassDefFoundError") + 32;
+                int pos2 = Output.indexOf("\n", pos);
+                String missing = Output.substring(pos, pos2);
+                if(missing.equals("ModLoader"))
+                {
+                    if(currentOS.isLinux())
+                        reason = "File-roller has a bug. Move ModLoader.class out of java/lang please.";
+                    else
+                        reason = "ModLoader was not installed.";
+                }
+                else if(missing.equals(""))
+                {
+                    
+                }
+            }
+            else if(Output.contains("java.lang.UnsatisfiedLinkError"))
+            {
+                reason = "Switch back to Java 6; Java 7 does not include a required library.";
+            }
+            else if(Output.contains(""))
+        }
     }
 }
