@@ -375,7 +375,7 @@ public class Main{
         {
             SPAMDETECT = true;
             analyzePartOne();
-            Output = "Recorded by MinecraftError (https://github.com/medsouz/MinecraftError).\n\nAutomatic analysis:"+analysis+"\n\n"+Output;
+            Output = "Recorded by MinecraftError (https://github.com/medsouz/MinecraftError).\n\nAutomatic analysis: "+analysis+"\n\n"+Output;
             textBox.setText(textBox.getText()+"\nPosting to pastebin.com...\n");
 
             //Build parameter string
