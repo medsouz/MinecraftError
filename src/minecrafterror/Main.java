@@ -104,10 +104,12 @@ public class Main{
         public Font Volt;
         
         public OSType currentOS;
+        public Main inst;
+        public String analysis;
                         
         public Main()
         {
-                
+            inst = this;
             InputStream in = getClass().getResourceAsStream("/minecrafterror/resources/VolterGoldfish.ttf");
             try {
                 Volt = Font.createFont(Font.TRUETYPE_FONT, in);
@@ -142,7 +144,7 @@ public class Main{
                 public void mousePressed(MouseEvent me) {
                     if (launch.isEnabled() == true) {
                         launch.setIcon(but3);
-                    ExecOutput mc = new ExecOutput(textBox);
+                    ExecOutput mc = new ExecOutput(textBox,inst);
                     Thread t = new Thread(mc);
                     t.start();
                             //Sound.CLICK.play();
@@ -258,7 +260,7 @@ public class Main{
             Launch.addMouseListener(new MouseAdapter(){
                 @Override
                 public void mousePressed(MouseEvent me) {
-                    ExecOutput mc = new ExecOutput(textBox);
+                    ExecOutput mc = new ExecOutput(textBox,inst);
                     Thread t = new Thread(mc);
                     t.start();
                 }
@@ -334,7 +336,7 @@ public class Main{
             analyze.setSize(232, 40);
             analyze.setLocation(340, 455);
             analyze.setHorizontalTextPosition(JLabel.CENTER);
-            analyze.setText("Analyze Error");
+            analyze.setText("Re-analyze Error");
             analyze.setForeground(Color.white);
             analyze.setFont(VolterT);
 
@@ -372,8 +374,9 @@ public class Main{
         if(!SPAMDETECT && !Output.isEmpty())
         {
             SPAMDETECT = true;
-            Output = "Recorded by MinecraftError (https://github.com/medsouz/MinecraftError):\n"+Output;
-            textBox.setText(textBox.getText()+"Posting to pastebin.com...\n");
+            analyzePartOne();
+            Output = "Recorded by MinecraftError (https://github.com/medsouz/MinecraftError).\n\nAutomatic analysis:"+analysis+"\n\n"+Output;
+            textBox.setText(textBox.getText()+"\nPosting to pastebin.com...\n");
 
             //Build parameter string
             String data = "api_dev_key=00ee7bd5d711b33ec4c1386b32f8e945&api_option=paste&api_paste_code="+Output;
@@ -398,7 +401,7 @@ public class Main{
                 writer.close();
                 reader.close();
 
-                //Output the response
+                //Output the URL
                 textBox.setText(textBox.getText()+answer.toString()+"\n");
 
             } catch (MalformedURLException ex) {
@@ -471,11 +474,37 @@ public class Main{
             return;
         }
     }
+    
+    
     public void analyze()
     {
         if(!SPAMDETECT && !Output.isEmpty())
         {
-            String reason = "";
+            boolean assKicking = analyzePartOne();
+            if(!assKicking)
+            {
+                textBox.setText(textBox.getText() + "\n\nHere's my guess as to what went wrong:\n" + analysis);
+            }
+            else
+            {
+                textBox.setText(textBox.getText() + "\n\nYou idiot.\n\n"+analysis);
+            }
+        }
+        else
+        {
+            if(Output.isEmpty())
+            {
+                textBox.setText(textBox.getText() + "\nThe output's empty. You need to run Minecraft first, and have it close as well.\n");
+            }
+            else if(SPAMDETECT)
+            {
+                textBox.setText(textBox.getText() +"\nWhoa, now. Don't be clicking buttons like a madman.\n");
+            }
+        }
+    }
+    private boolean analyzePartOne()
+    {
+            analysis = "";
             boolean swiftKickInTheAss = false;
             
             /// SECTION: OUTPUT
@@ -485,23 +514,23 @@ public class Main{
                     || Output.contains("java.lang.NoSuchMethodError")
                     )
             {
-                reason = "You installed mods with a minecraft version different than the one you're using.";
+                analysis = "You installed mods with a minecraft version different than the one you're using.";
                 swiftKickInTheAss = true;
             }
             else if(Output.contains("java.lang.StackOverflowError"))
             {
-                reason = "Minecraft had an infinite loop. If you were not testing a mod...god help you.";
+                analysis = "Minecraft had an infinite loop. If you were not testing a mod...god help you.";
             }
             else if(Output.contains("EXCEPTION_ACCESS_VIOLATION") || Output.contains("SIGSEGV"))
             {
                 
                 if(currentOS.isLinux())
                 {
-                    reason = "Segmentation fault. Try disabling the FGLRX drivers.";
+                    analysis = "Segmentation fault. Try disabling the FGLRX drivers.";
                 }
                 else
                 {
-                    reason = "Segmentation fault. Check your graphics drivers.";
+                    analysis = "Segmentation fault. Check your graphics drivers.";
                 }
             }
             else if(Output.contains("java.lang.NoClassDefFoundError"))
@@ -514,11 +543,11 @@ public class Main{
                 {
                     if(currentOS.isLinux())
                     {
-                        reason = "File-roller has a bug. Move ModLoader.class out of java/lang please.";
+                        analysis = "File-roller has a bug. Move ModLoader.class out of java/lang please.";
                     }
                     else
                     {
-                        reason = "ModLoader was not installed. You failed.";
+                        analysis = "ModLoader was not installed. You failed.";
                         swiftKickInTheAss = true;
                     }
                 }
@@ -528,49 +557,49 @@ public class Main{
                 }
                 else if(Output.contains("wrong name:"))
                 {
-                        reason = "MCP recompilation error";
+                        analysis = "MCP recompilation error";
                 }
             }
             else if(Output.contains("java.lang.UnsatisfiedLinkError"))
             {
-                reason = "You have to switch back to Java 6; Java 7 does not include a required library.";
+                analysis = "You have to switch back to Java 6; Java 7 does not include a required library.";
             }
             else if(Output.contains("java.lang.SecurityException: SHA-256 digest error"))
             {
-                reason = "Failure to delete META-INF.";
+                analysis = "Failure to delete META-INF.";
                 swiftKickInTheAss = true;
             }
             else if(Output.contains("insufficient memory"))
             {
-                reason = "Java ran out of memory. Get more RAM. Sorry about that.";
+                analysis = "Java ran out of memory. Get more RAM. Sorry about that.";
             }
             else if(Output.contains("java.lang.IllegalStateException: Only one LWJGL context may be instantiated at any one time.")
                 || Output.contains("org.lwjgl.LWJGLException: Could not create context")
                 )
             {
-                reason = "Something went wrong with the rendering. Unknown cause.";
+                analysis = "Something went wrong with the rendering. Unknown cause.";
             }
             else if(Output.contains("java.io.FileNotFoundException"))
             {
-                reason = "Unknown. Maybe you missed a few files when installing the mod.";
+                analysis = "Unknown. Maybe you missed a few files when installing the mod.";
             }
             else if(Output.contains("Starting minecraft server"))
             {
-                reason = "Client mods DO NOT WORK on a server!!!";
+                analysis = "Client mods DO NOT WORK on a server!!!";
                 swiftKickInTheAss = true;
             }
             else if(Output.contains("java.io.IOException: Bad packet id 230"))
             {
-                reason = "You forgot to install ModLoaderMP. Failure.";
+                analysis = "You forgot to install ModLoaderMP. Failure.";
                 swiftKickInTheAss = true;
             }
             else if(Output.contains("java.util.zip.ZipException: invalid entry"))
             {
-                reason = "You used a bad zip archiver. Use 7zip or WinRAR.";
+                analysis = "You used a bad zip archiver. Use 7zip or WinRAR.";
                 swiftKickInTheAss = true;
             }
             /// SECTION: MODLOADER.TXT
-            if(reason.isEmpty())
+            if(analysis.isEmpty())
             {
                 String contents = "";
                 try
@@ -584,7 +613,7 @@ public class Main{
                     //one last check to make sure everything worked
                     if(modLoaderPath.equals(""))
                     {
-                        reason = "Analysis failed! Here's the minecraft output again: \n" + Output;
+                        analysis = "Analysis failed! Here's the minecraft output again: \n" + Output;
                     }
                 }
                 catch(java.io.FileNotFoundException e)
@@ -597,37 +626,18 @@ public class Main{
                 {
                     if(contents.contains("CONFLICT @"))
                     {
-                        reason = "Conflicting block IDs. Recommend ID Resolver: \nhttp://www.minecraftforum.net/topic/366377-";
+                        analysis = "Conflicting block IDs. Recommend ID Resolver: \nhttp://www.minecraftforum.net/topic/366377-";
                     }
                     if(contents.contains("ailed to load mod"))
                     {
-                        reason = "A mod failed to load. You may want to double-check that you installed everything right with the right minecraft version.";
+                        analysis = "A mod failed to load. You may want to double-check that you installed everything right with the right minecraft version.";
                     }
                 }
                 else
                 {
-                    reason = "Analysis failed! Here's the minecraft output again: \n" + Output;
+                    analysis = "Hm, I can't seem to figure it out.\nIf your client failed to load press Paste Error and show that link to #Risucraft on esper.net";
                 }
             }
-            if(!swiftKickInTheAss)
-            {
-                textBox.setText(textBox.getText() + "\n\nHere's my guess as to what went wrong: \n\n" + reason);
-            }
-            else
-            {
-                textBox.setText(textBox.getText() + "\n\nYou idiot.\n\n"+reason);
-            }
-        }
-        else
-        {
-            if(Output.isEmpty())
-            {
-                textBox.setText("The output's empty. You need to run Minecraft first!");
-            }
-            else if(SPAMDETECT)
-            {
-                textBox.setText("Whoa, now. Don't be clicking buttons like a madman.");
-            }
-        }
+        return swiftKickInTheAss;
     }
 }

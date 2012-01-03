@@ -4,9 +4,11 @@ import java.net.*;
 public class ExecOutput implements Runnable {
 
     private javax.swing.JTextArea jTextArea1;
+    private Main mcopy;
 
-    public ExecOutput(javax.swing.JTextArea Output) {
+    public ExecOutput(javax.swing.JTextArea Output, Main m) {
         jTextArea1 = Output;
+        mcopy = m;
     }
     @Override
     public void run() {
@@ -61,7 +63,8 @@ public class ExecOutput implements Runnable {
         // set output
         Main.Output = output;
         Main.SPAMDETECT = false;
-        jTextArea1.setText(jTextArea1.getText()+"\n\nError report complete, if your client failed to load press Paste Error and show that link to #Risucraft on esper.net.\n");
+        jTextArea1.setText(jTextArea1.getText()+"Error report complete.");
         jTextArea1.setCaretPosition(jTextArea1.getText().length() - 1);
+        mcopy.analyze(); // Auto-analyze
     }
 }
