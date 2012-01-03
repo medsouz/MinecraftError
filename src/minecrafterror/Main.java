@@ -599,7 +599,7 @@ public class Main{
                 swiftKickInTheAss = true;
             }
             /// SECTION: MODLOADER.TXT
-            if(analysis.isEmpty())
+            /*if(analysis.isEmpty())
             {
                 String contents = "";
                 try
@@ -632,11 +632,11 @@ public class Main{
                     {
                         analysis = "A mod failed to load. You may want to double-check that you installed everything right with the right minecraft version.";
                     }
-                }
+                }*/
                 else
                 {
                     analysis = "Hm, I can't seem to figure it out.\nIf your client failed to load press Paste Error and show that link to #Risucraft on esper.net";
-                }
+                //}
             }
         return swiftKickInTheAss;
     }
