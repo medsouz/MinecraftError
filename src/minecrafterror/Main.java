@@ -290,7 +290,7 @@ public class Main{
                 @Override
                 public void mousePressed(MouseEvent me) {
                     JOptionPane.showMessageDialog(frame,
-                        "Created by medsouz for the sole purpose of easily logging Minecraft's outputs and errors.\nGUI created by Malqua.",
+                        "Created by medsouz for the sole purpose of easily logging Minecraft's outputs and errors.\nGUI created by Malqua.\nAnalysis created by Riking for easy diagnosis.",
                         "About",
                         JOptionPane.QUESTION_MESSAGE,
                         aboat);
@@ -483,7 +483,7 @@ public class Main{
         {
             if(!assKicking)
             {
-                textBox.setText(textBox.getText() + "\n\nHere's my guess as to what went wrong:\n" + analysis);
+                textBox.setText(textBox.getText() + "\n\nHere's my guess as to what went wrong:\n\n" + analysis);
             }
             else
             {
@@ -543,7 +543,7 @@ public class Main{
             {
                 if(currentOS.isLinux())
                 {
-                    analysis = "File-roller has a bug. Move ModLoader.class out of java/lang please.";
+                    analysis = "You either did not install ModLoader, or you hit the bug with file-roller.\nMove ModLoader.class out of minecraft.jar/java/lang/ please.";
                 }
                 else
                 {
@@ -600,7 +600,7 @@ public class Main{
         }
         else
         {
-            analysis = "Hm, I can't seem to figure it out.\nIf your client failed to load press Paste Error and show that link to #Risucraft on esper.net";
+            analysis = "Hm, I can't seem to figure it out. If your client failed to load press Paste Error and show that link to #Risucraft on esper.net";
         }
         return swiftKickInTheAss;
     }
