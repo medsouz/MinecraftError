@@ -611,18 +611,18 @@ public class Main{
             }
             if(!swiftKickInTheAss)
             {
-                textBox.setText("Here's my guess as to what went wrong: \n\n" + reason);
+                textBox.setText(textBox.getText() + "\n\nHere's my guess as to what went wrong: \n\n" + reason);
             }
             else
             {
-                textBox.setText("You idiot.\n\n"+reason);
+                textBox.setText(textBox.getText() + "\n\nYou idiot.\n\n"+reason);
             }
         }
         else
         {
             if(Output.isEmpty())
             {
-                textBox.setText("Run minecraft first!");
+                textBox.setText("The output's empty. You need to run Minecraft first!");
             }
             else if(SPAMDETECT)
             {

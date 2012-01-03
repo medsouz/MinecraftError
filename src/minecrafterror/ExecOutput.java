@@ -61,7 +61,7 @@ public class ExecOutput implements Runnable {
         // set output
         Main.Output = output;
         Main.SPAMDETECT = false;
-        jTextArea1.setText(jTextArea1.getText()+"Error report complete, if your client failed to load press Paste Error and show that link to #Risucraft on esper.net.\n");
+        jTextArea1.setText(jTextArea1.getText()+"\n\nError report complete, if your client failed to load press Paste Error and show that link to #Risucraft on esper.net.\n");
         jTextArea1.setCaretPosition(jTextArea1.getText().length() - 1);
     }
 }
