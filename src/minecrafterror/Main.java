@@ -468,6 +468,8 @@ public class Main{
         if(!SPAMDETECT && !Output.isEmpty())
         {
             String reason = "";
+	    boolean swiftKickInTheAss = false;
+
             if(Output.contains("java.lang.VerifyError")
                     || Output.contains("java.lang.IncompatibleClassChangeError")
                     || Output.contains("java.lang.NoSuchFieldError")
@@ -475,6 +477,7 @@ public class Main{
                     )
             {
                 reason = "A mod has the wrong minecraft version. NOTE: You may have to check your mods folder.";
+		swiftKickInTheAss = true;
             }
             else if(Output.contains("java.lang.StackOverflowError"))
             {
@@ -497,23 +500,45 @@ public class Main{
                 int pos =Output.indexOf("java.lang.NoClassDefFoundError") + 32;
                 int pos2 = Output.indexOf("\n", pos);
                 String missing = Output.substring(pos, pos2);
+
                 if(missing.equals("ModLoader"))
                 {
                     if(currentOS.isLinux())
+		    {
                         reason = "File-roller has a bug. Move ModLoader.class out of java/lang please.";
+		    }
                     else
+		    {
                         reason = "ModLoader was not installed.";
+			swiftKickInTheAss = true;
+		    }
                 }
                 else if(missing.equals(""))
                 {
                     
                 }
+		else if(Output.contains("wrong name:")
+		{
+			reason = "MCP recompilation error";
+		}
             }
             else if(Output.contains("java.lang.UnsatisfiedLinkError"))
             {
                 reason = "Switch back to Java 6; Java 7 does not include a required library.";
             }
-            else if(Output.contains(""))
+            else if(Output.contains("java.lang.SecurityException: SHA-256 digest error"))
+	    {
+		reason = "Failure to delete META-INF";
+		swiftKickInTheAss = true;
+	    }
+	    else if(Output.contains("insufficient memory")
+	    {
+		reason = "Java ran out of memory. Get more RAM. Sorry about that.";
+	    }
+	    else if(Output.contains("Failed to load mod from")
+	    {
+	    }
+	    else if(
         }
     }
 }
