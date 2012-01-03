@@ -478,9 +478,9 @@ public class Main{
     
     public void analyze()
     {
+        boolean assKicking = analyzePartOne();
         if(!SPAMDETECT && !Output.isEmpty())
         {
-            boolean assKicking = analyzePartOne();
             if(!assKicking)
             {
                 textBox.setText(textBox.getText() + "\n\nHere's my guess as to what went wrong:\n" + analysis);
