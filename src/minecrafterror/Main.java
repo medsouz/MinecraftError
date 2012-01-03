@@ -554,6 +554,21 @@ public class Main{
             {
                 reason = "Unknown. Maybe you missed a few files when installing the mod.";
             }
+            else if(Output.contains("Starting minecraft server")
+            {
+                reason = "Client mods do NOT WORK on a server!!!";
+                swiftKickInTheAss = true;
+            }
+            else if(Output.contains("java.io.IOException: Bad packet id 230")
+            {
+                reason = "Mod missing: ModLoaderMP";
+                swiftKickInTheAss = true;
+            }
+            else if(Output.contains("java.util.zip.ZipException: invalid entry")
+            {
+                reason = "Bad zip archiver. Use 7zip or WinRAR.";
+                swiftKickInTheAss = true;
+            }
             /// SECTION: MODLOADER.TXT
             if(reason == "")
             {
@@ -565,9 +580,8 @@ public class Main{
 				    contents = contents + new String(b);
 				    f.close();
 				    //one last check to make sure everything worked
-				    if(modLoaderPath.equals("") || contents.equals("")){
+				    if(modLoaderPath.equals("")){
 				        System.out.println("failed");
-				        //** TODO: popup box, maybe?
 				        return;
 				    }
                 }
@@ -576,7 +590,18 @@ public class Main{
                 catch(Exception e)
                 {
                     e.printStackTrace();
-                } 
+                }
+                if(!contents.isEmpty())
+                {
+                    if(contents.contains("CONFLICT @")
+                    {
+                        reason = "Conflicting block IDs. Recommend ID Resolver.");
+                    }
+                    if(contents.contains("ailed to load mod")
+                    {
+                        reason = "A mod failed to load. Double-check everything!");
+                    }
+				}
             }
             /// convey the results to the user somehow
             System.out.println("Detected reason:"+reason);
