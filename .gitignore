@@ -9,3 +9,4 @@ build.xml
 manifest.mf
 minecrafterr.jar
 .metadata/
+/build/
