@@ -76,23 +76,22 @@ public class Main{
         //
 
         public static void main(String args[]) {
-                try {
-                        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                } catch (InstantiationException e) {
-                        e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                } catch (UnsupportedLookAndFeelException e) {
-                        e.printStackTrace();
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (UnsupportedLookAndFeelException e) {
+                e.printStackTrace();
+            }
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override public void run() {
+                    new Main();
                 }
-                SwingUtilities.invokeLater(new Runnable() {
-                        @Override public void run() {
-                                new Main();
-                        }
-                });
-                setOS();
+            });
         }
         
         public JTextArea textBox = new JTextArea()        ;
@@ -109,252 +108,253 @@ public class Main{
         public Main()
         {
                 
-                InputStream in = getClass().getResourceAsStream("/minecrafterror/resources/VolterGoldfish.ttf");
-                try {
-                        Volt = Font.createFont(Font.TRUETYPE_FONT, in);
-                } catch (FontFormatException e) {
+            InputStream in = getClass().getResourceAsStream("/minecrafterror/resources/VolterGoldfish.ttf");
+            try {
+                Volt = Font.createFont(Font.TRUETYPE_FONT, in);
+            } catch (FontFormatException e) {
 
-                        e.printStackTrace();
-                } catch (IOException e) {
-                        e.printStackTrace();
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            Font VolterT = Volt.deriveFont(18F);
+            @SuppressWarnings("unused")
+            Font VolterS = Volt.deriveFont(26F);
+            @SuppressWarnings("unused")
+            Font VolterL = Volt.deriveFont(32F);
+
+
+            launch.addMouseListener(new MouseAdapter(){
+                @Override
+                public void mouseExited(MouseEvent me){
+                    if (launch.isEnabled() == true) {
+                        launch.setIcon(but1);
+                    }
+                }                
+                @Override
+                public void mouseEntered(MouseEvent me) {
+                    if (launch.isEnabled() == true) {
+                        launch.setIcon(but2);
+                    }
+                }
+                @Override
+                public void mousePressed(MouseEvent me) {
+                    if (launch.isEnabled() == true) {
+                        launch.setIcon(but3);
+                    ExecOutput mc = new ExecOutput(textBox);
+                    Thread t = new Thread(mc);
+                    t.start();
+                            //Sound.CLICK.play();
+                    }
+                }
+                @Override
+                public void mouseReleased(MouseEvent me) {
+                    if (launch.isEnabled() == true) {
+                        launch.setIcon(but2);
+                    }
+                }
+            });
+
+            paste.addMouseListener(new MouseAdapter(){
+                @Override
+                public void mouseExited(MouseEvent me){
+                    if (paste.isEnabled() == true) {
+                        paste.setIcon(but1);
+                    }
+                }                
+
+                @Override
+                public void mouseEntered(MouseEvent me) {
+                    if (paste.isEnabled() == true) {
+                        paste.setIcon(but2);
+                    }
                 }
 
-                Font VolterT = Volt.deriveFont(18F);
-                @SuppressWarnings("unused")
-                Font VolterS = Volt.deriveFont(26F);
-                @SuppressWarnings("unused")
-                Font VolterL = Volt.deriveFont(32F);
-                
-                
-                launch.addMouseListener(new MouseAdapter(){
-                        @Override
-                        public void mouseExited(MouseEvent me){
-                                if (launch.isEnabled() == true) {
-                                        launch.setIcon(but1);
-                                }
-                        }                
-                        @Override
-                        public void mouseEntered(MouseEvent me) {
-                                if (launch.isEnabled() == true) {
-                                        launch.setIcon(but2);
-                                        }
-                        }
-                        @Override
-                        public void mousePressed(MouseEvent me) {
-                                if (launch.isEnabled() == true) {
-                                        launch.setIcon(but3);
-                                ExecOutput mc = new ExecOutput(textBox);
-                                Thread t = new Thread(mc);
-                                t.start();
-                                        //Sound.CLICK.play();
-                                }
-                        }
-                        @Override
-                        public void mouseReleased(MouseEvent me) {
-                                if (launch.isEnabled() == true) {
-                                        launch.setIcon(but2);
-                                }
-                        }
-                });
-                
-                paste.addMouseListener(new MouseAdapter(){
-                        @Override
-                        public void mouseExited(MouseEvent me){
-                                    if (paste.isEnabled() == true) {
-                                        paste.setIcon(but1);
-                                }
-                        }                
-                        
-                        @Override
-                        public void mouseEntered(MouseEvent me) {
-                                if (paste.isEnabled() == true) {
-                                        paste.setIcon(but2);
-                                        }
-                        }
+                @Override
+                public void mousePressed(MouseEvent me) {
+                    if (paste.isEnabled() == true) {
+                        paste.setIcon(but3);
+                        pastebin();
+                        //Sound.CLICK.play();
+                    }
+                }
 
-                        @Override
-                        public void mousePressed(MouseEvent me) {
-                                if (paste.isEnabled() == true) {
-                                        paste.setIcon(but3);
-                                        pastebin();
-                                        //Sound.CLICK.play();
-                                }
-                        }
+                @Override
+                public void mouseReleased(MouseEvent me) {
+                    if (paste.isEnabled() == true) {
+                        paste.setIcon(but2);
+                    }
+                }
+            });
 
-                        @Override
-                        public void mouseReleased(MouseEvent me) {
-                                if (paste.isEnabled() == true) {
-                                        paste.setIcon(but2);
-                                }
-                        }
-                });
-                
-                pasteML.addMouseListener(new MouseAdapter(){
-                        @Override
-                        public void mouseExited(MouseEvent me){
-                                if (pasteML.isEnabled() == true) {
-                                        pasteML.setIcon(but1b);
-                                }
-                        }                
-                        
-                        @Override
-                        public void mouseEntered(MouseEvent me) {
-                                if (pasteML.isEnabled() == true) {
-                                        pasteML.setIcon(but2b);
-                                        }
-                        }
+            pasteML.addMouseListener(new MouseAdapter(){
+                @Override
+                public void mouseExited(MouseEvent me){
+                    if (pasteML.isEnabled() == true) {
+                        pasteML.setIcon(but1b);
+                    }
+                }                
 
-                        @Override
-                        public void mousePressed(MouseEvent me) {
-                                if (pasteML.isEnabled() == true) {
-                                        pasteML.setIcon(but3b);
-                                        pasteModLoaderOutput();
-                                        //Sound.CLICK.play();
-                                }
-                        }
+                @Override
+                public void mouseEntered(MouseEvent me) {
+                    if (pasteML.isEnabled() == true) {
+                        pasteML.setIcon(but2b);
+                    }
+                }
 
-                        @Override
-                        public void mouseReleased(MouseEvent me) {
-                                if (paste.isEnabled() == true) {
-                                        paste.setIcon(but2b);
-                                }
-                        }
-                });
-                paste.addMouseListener(new MouseAdapter(){
-                        @Override
-                        public void mouseExited(MouseEvent me){
-                                    if (paste.isEnabled() == true) {
-                                        paste.setIcon(but1);
-                                }
-                        }                
-                        
-                        @Override
-                        public void mouseEntered(MouseEvent me) {
-                                if (paste.isEnabled() == true) {
-                                        paste.setIcon(but2);
-                                        }
-                        }
+                @Override
+                public void mousePressed(MouseEvent me) {
+                    if (pasteML.isEnabled() == true) {
+                        pasteML.setIcon(but3b);
+                        pasteModLoaderOutput();
+                        //Sound.CLICK.play();
+                    }
+                }
 
-                        @Override
-                        public void mousePressed(MouseEvent me) {
-                                if (paste.isEnabled() == true) {
-                                        paste.setIcon(but3);
-                                        analyze();
-                                        //Sound.CLICK.play();
-                                }
-                        }
+                @Override
+                public void mouseReleased(MouseEvent me) {
+                    if (paste.isEnabled() == true) {
+                        paste.setIcon(but2b);
+                    }
+                }
+            });
+            analyze.addMouseListener(new MouseAdapter(){
+                @Override
+                public void mouseExited(MouseEvent me){
+                    if (paste.isEnabled() == true) {
+                        paste.setIcon(but1);
+                    }
+                }                
 
-                        @Override
-                        public void mouseReleased(MouseEvent me) {
-                                if (paste.isEnabled() == true) {
-                                        paste.setIcon(but2);
-                                }
-                        }
-                });
-                
-                JMenu File = new JMenu("File");
-                
-                JMenuItem Launch = new JMenuItem("Launch Minecraft", play);
-                File.add(Launch);
-                Launch.addMouseListener(new MouseAdapter(){
-                    @Override
-                        public void mousePressed(MouseEvent me) {
-                        ExecOutput mc = new ExecOutput(textBox);
-                        Thread t = new Thread(mc);
-                        t.start();
-                        }
-                });
-                
-                JMenuItem Paste = new JMenuItem("Paste Error", copy);
-                File.add(Paste);
-                
-                JMenuItem Options = new JMenuItem("Options", options);
-                File.add(Options);
-                File.addSeparator();
-                
-                JMenuItem Exit = new JMenuItem("Exit");
-                File.add(Exit);
-                Exit.addMouseListener(new MouseAdapter(){
-                    @Override
-                        public void mousePressed(MouseEvent me) {
-                                frame.dispose();
-                        }
-                });
-                
-                JMenu Help = new JMenu("Help");
-                
-                JMenuItem About = new JMenuItem("About", question);
-                Help.add(About);
-                About.addMouseListener(new MouseAdapter(){
-                    @Override
-                        public void mousePressed(MouseEvent me) {
-                                JOptionPane.showMessageDialog(frame,
-                                            "Created by medsouz for the sole purpose of easily logging Minecraft's outputs and errors.\nGUI created by Malqua.",
-                                            "About",
-                                            JOptionPane.QUESTION_MESSAGE,
-                                            aboat);
-                        }
-                });
-                
-                JScrollPane scroll = new JScrollPane();
-                scroll.setBounds(0,0,580,330);
-                scroll.setViewportView(textBox);
-                scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-                scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-                scroll.setViewportBorder(BorderFactory.createLineBorder(Color.black));
-                scroll.setLocation(8,20);
+                @Override
+                public void mouseEntered(MouseEvent me) {
+                    if (paste.isEnabled() == true) {
+                        paste.setIcon(but2);
+                    }
+                }
 
-                textBox.setWrapStyleWord(true);
-                textBox.setLineWrap(true);
-                textBox.setCaretColor(null);
-                textBox.setForeground(Color.black);
-                textBox.setMargin(new Insets(5,5,5,0));
-                textBox.setEditable(false);
-                
-                launch.setSize(212, 40);
-                launch.setLocation(30, 410);
-                launch.setHorizontalTextPosition(JLabel.CENTER);
-                launch.setText("Launch Minecraft");
-                launch.setForeground(Color.white);
-                launch.setFont(VolterT);
-                
-                paste.setSize(212, 40);
-                paste.setLocation(350, 365);
-                paste.setHorizontalTextPosition(JLabel.CENTER);
-                paste.setText("Paste Error");
-                paste.setForeground(Color.white);
-                paste.setFont(VolterT);
-                
-                pasteML.setSize(232, 40);
-                pasteML.setLocation(340, 410);
-                pasteML.setHorizontalTextPosition(JLabel.CENTER);
-                pasteML.setText("Paste ModLoader.txt");
-                pasteML.setForeground(Color.white);
-                pasteML.setFont(VolterT);
+                @Override
+                public void mousePressed(MouseEvent me) {
+                    if (paste.isEnabled() == true) {
+                        paste.setIcon(but3);
+                        analyze();
+                        //Sound.CLICK.play();
+                    }
+                }
 
-                analyze.setSize(232, 40);
-                analyze.setLocation(340, 455);
-                analyze.setHorizontalTextPosition(JLabel.CENTER);
-                analyze.setText("Analyze Error");
-                analyze.setForeground(Color.white);
-                analyze.setFont(VolterT);
-                
-                menu.add(File);
-                menu.add(Help);
-                
-                frame.setIconImage(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/minecrafterror/resources/icon.png")));
-                frame.setLocationRelativeTo(null);
-                frame.setContentPane(new JLabel(new ImageIcon(bg)));
-                frame.setSize(600,555);
-                frame.setResizable(false);
-                frame.add(paste);
-                frame.add(pasteML);
-                frame.add(launch);
-                frame.add(scroll);
-                frame.add(analyze);
-                frame.setJMenuBar(menu);
-                frame.setVisible(true);
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                @Override
+                public void mouseReleased(MouseEvent me) {
+                    if (paste.isEnabled() == true) {
+                        paste.setIcon(but2);
+                    }
+                }
+            });
+
+            JMenu File = new JMenu("File");
+
+            JMenuItem Launch = new JMenuItem("Launch Minecraft", play);
+            File.add(Launch);
+            Launch.addMouseListener(new MouseAdapter(){
+                @Override
+                public void mousePressed(MouseEvent me) {
+                    ExecOutput mc = new ExecOutput(textBox);
+                    Thread t = new Thread(mc);
+                    t.start();
+                }
+            });
+
+            JMenuItem Paste = new JMenuItem("Paste Error", copy);
+            File.add(Paste);
+
+            JMenuItem Options = new JMenuItem("Options", options);
+            File.add(Options);
+            File.addSeparator();
+
+            JMenuItem Exit = new JMenuItem("Exit");
+            File.add(Exit);
+            Exit.addMouseListener(new MouseAdapter(){
+                @Override
+                public void mousePressed(MouseEvent me) {
+                    frame.dispose();
+                }
+            });
+
+            JMenu Help = new JMenu("Help");
+
+            JMenuItem About = new JMenuItem("About", question);
+            Help.add(About);
+            About.addMouseListener(new MouseAdapter(){
+                @Override
+                public void mousePressed(MouseEvent me) {
+                    JOptionPane.showMessageDialog(frame,
+                        "Created by medsouz for the sole purpose of easily logging Minecraft's outputs and errors.\nGUI created by Malqua.",
+                        "About",
+                        JOptionPane.QUESTION_MESSAGE,
+                        aboat);
+                }
+            });
+
+            JScrollPane scroll = new JScrollPane();
+            scroll.setBounds(0,0,580,330);
+            scroll.setViewportView(textBox);
+            scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+            scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+            scroll.setViewportBorder(BorderFactory.createLineBorder(Color.black));
+            scroll.setLocation(8,20);
+
+            textBox.setWrapStyleWord(true);
+            textBox.setLineWrap(true);
+            textBox.setCaretColor(null);
+            textBox.setForeground(Color.black);
+            textBox.setMargin(new Insets(5,5,5,0));
+            textBox.setEditable(false);
+
+            launch.setSize(212, 40);
+            launch.setLocation(30, 410);
+            launch.setHorizontalTextPosition(JLabel.CENTER);
+            launch.setText("Launch Minecraft");
+            launch.setForeground(Color.white);
+            launch.setFont(VolterT);
+
+            paste.setSize(212, 40);
+            paste.setLocation(350, 365);
+            paste.setHorizontalTextPosition(JLabel.CENTER);
+            paste.setText("Paste Error");
+            paste.setForeground(Color.white);
+            paste.setFont(VolterT);
+
+            pasteML.setSize(232, 40);
+            pasteML.setLocation(340, 410);
+            pasteML.setHorizontalTextPosition(JLabel.CENTER);
+            pasteML.setText("Paste ModLoader.txt");
+            pasteML.setForeground(Color.white);
+            pasteML.setFont(VolterT);
+
+            analyze.setSize(232, 40);
+            analyze.setLocation(340, 455);
+            analyze.setHorizontalTextPosition(JLabel.CENTER);
+            analyze.setText("Analyze Error");
+            analyze.setForeground(Color.white);
+            analyze.setFont(VolterT);
+
+            menu.add(File);
+            menu.add(Help);
+
+            frame.setIconImage(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/minecrafterror/resources/icon.png")));
+            frame.setLocationRelativeTo(null);
+            frame.setContentPane(new JLabel(new ImageIcon(bg)));
+            frame.setSize(600,555);
+            frame.setResizable(false);
+            frame.add(paste);
+            frame.add(pasteML);
+            frame.add(launch);
+            frame.add(scroll);
+            frame.add(analyze);
+            frame.setJMenuBar(menu);
+            frame.setVisible(true);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setOS();
         }
         public void setOS()
         {
