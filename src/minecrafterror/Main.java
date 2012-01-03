@@ -598,45 +598,9 @@ public class Main{
                 analysis = "You used a bad zip archiver. Use 7zip or WinRAR.";
                 swiftKickInTheAss = true;
             }
-            /// SECTION: MODLOADER.TXT
-            /*if(analysis.isEmpty())
+            else
             {
-                String contents = "";
-                try
-                {
-                    String modLoaderPath = getModLoaderPath();
-                    byte[] b = new byte[(int) new File(modLoaderPath).length()];
-                    BufferedInputStream f = new BufferedInputStream(new FileInputStream(modLoaderPath));
-                    f.read(b);
-                    contents += new String(b);
-                    f.close();
-                    //one last check to make sure everything worked
-                    if(modLoaderPath.equals(""))
-                    {
-                        analysis = "Analysis failed! Here's the minecraft output again: \n" + Output;
-                    }
-                }
-                catch(java.io.FileNotFoundException e)
-                {}
-                catch(Exception e)
-                {
-                    e.printStackTrace();
-                }
-                if(!contents.isEmpty())
-                {
-                    if(contents.contains("CONFLICT @"))
-                    {
-                        analysis = "Conflicting block IDs. Recommend ID Resolver: \nhttp://www.minecraftforum.net/topic/366377-";
-                    }
-                    if(contents.contains("ailed to load mod"))
-                    {
-                        analysis = "A mod failed to load. You may want to double-check that you installed everything right with the right minecraft version.";
-                    }
-                }*/
-                else
-                {
-                    analysis = "Hm, I can't seem to figure it out.\nIf your client failed to load press Paste Error and show that link to #Risucraft on esper.net";
-                //}
+                analysis = "Hm, I can't seem to figure it out.\nIf your client failed to load press Paste Error and show that link to #Risucraft on esper.net";
             }
         return swiftKickInTheAss;
     }
