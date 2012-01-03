@@ -504,104 +504,104 @@ public class Main{
     }
     private boolean analyzePartOne()
     {
-            analysis = "";
-            boolean swiftKickInTheAss = false;
-            
-            /// SECTION: OUTPUT
-            if(Output.contains("java.lang.VerifyError")
-                    || Output.contains("java.lang.IncompatibleClassChangeError")
-                    || Output.contains("java.lang.NoSuchFieldError")
-                    || Output.contains("java.lang.NoSuchMethodError")
-                    )
-            {
-                analysis = "You installed mods with a minecraft version different than the one you're using.";
-                swiftKickInTheAss = true;
-            }
-            else if(Output.contains("java.lang.StackOverflowError"))
-            {
-                analysis = "Minecraft had an infinite loop. If you were not testing a mod...god help you.";
-            }
-            else if(Output.contains("EXCEPTION_ACCESS_VIOLATION") || Output.contains("SIGSEGV"))
-            {
-                
-                if(currentOS.isLinux())
-                {
-                    analysis = "Segmentation fault. Try disabling the FGLRX drivers.";
-                }
-                else
-                {
-                    analysis = "Segmentation fault. Check your graphics drivers.";
-                }
-            }
-            else if(Output.contains("java.lang.NoClassDefFoundError"))
-            {
-                int pos =Output.indexOf("java.lang.NoClassDefFoundError") + 32;
-                int pos2 = Output.indexOf("\n", pos);
-                String missing = Output.substring(pos, pos2);
+        analysis = "Hm, I can't seem to figure it out.\nIf your client failed to load press Paste Error and show that link to #Risucraft on esper.net";
+        boolean swiftKickInTheAss = false;
 
-                if(missing.equals("ModLoader"))
-                {
-                    if(currentOS.isLinux())
-                    {
-                        analysis = "File-roller has a bug. Move ModLoader.class out of java/lang please.";
-                    }
-                    else
-                    {
-                        analysis = "ModLoader was not installed. You failed.";
-                        swiftKickInTheAss = true;
-                    }
-                }
-                else if(missing.equals(""))
-                {
-                    
-                }
-                else if(Output.contains("wrong name:"))
-                {
-                        analysis = "MCP recompilation error";
-                }
-            }
-            else if(Output.contains("java.lang.UnsatisfiedLinkError"))
-            {
-                analysis = "You have to switch back to Java 6; Java 7 does not include a required library.";
-            }
-            else if(Output.contains("java.lang.SecurityException: SHA-256 digest error"))
-            {
-                analysis = "Failure to delete META-INF.";
-                swiftKickInTheAss = true;
-            }
-            else if(Output.contains("insufficient memory"))
-            {
-                analysis = "Java ran out of memory. Get more RAM. Sorry about that.";
-            }
-            else if(Output.contains("java.lang.IllegalStateException: Only one LWJGL context may be instantiated at any one time.")
-                || Output.contains("org.lwjgl.LWJGLException: Could not create context")
+        /// SECTION: OUTPUT
+        if(Output.contains("java.lang.VerifyError")
+                || Output.contains("java.lang.IncompatibleClassChangeError")
+                || Output.contains("java.lang.NoSuchFieldError")
+                || Output.contains("java.lang.NoSuchMethodError")
                 )
+        {
+            analysis = "You installed mods with a minecraft version different than the one you're using.";
+            swiftKickInTheAss = true;
+        }
+        else if(Output.contains("java.lang.StackOverflowError"))
+        {
+            analysis = "Minecraft had an infinite loop. If you were not testing a mod...god help you.";
+        }
+        else if(Output.contains("EXCEPTION_ACCESS_VIOLATION") || Output.contains("SIGSEGV"))
+        {
+
+            if(currentOS.isLinux())
             {
-                analysis = "Something went wrong with the rendering. Unknown cause.";
-            }
-            else if(Output.contains("java.io.FileNotFoundException"))
-            {
-                analysis = "Unknown. Maybe you missed a few files when installing the mod.";
-            }
-            else if(Output.contains("Starting minecraft server"))
-            {
-                analysis = "Client mods DO NOT WORK on a server!!!";
-                swiftKickInTheAss = true;
-            }
-            else if(Output.contains("java.io.IOException: Bad packet id 230"))
-            {
-                analysis = "You forgot to install ModLoaderMP. Failure.";
-                swiftKickInTheAss = true;
-            }
-            else if(Output.contains("java.util.zip.ZipException: invalid entry"))
-            {
-                analysis = "You used a bad zip archiver. Use 7zip or WinRAR.";
-                swiftKickInTheAss = true;
+                analysis = "Segmentation fault. Try disabling the FGLRX drivers.";
             }
             else
             {
-                analysis = "Hm, I can't seem to figure it out.\nIf your client failed to load press Paste Error and show that link to #Risucraft on esper.net";
+                analysis = "Segmentation fault. Check your graphics drivers.";
             }
+        }
+        else if(Output.contains("java.lang.NoClassDefFoundError"))
+        {
+            int pos =Output.indexOf("java.lang.NoClassDefFoundError") + 32;
+            int pos2 = Output.indexOf("\n", pos);
+            String missing = Output.substring(pos, pos2);
+
+            if(missing.equals("ModLoader"))
+            {
+                if(currentOS.isLinux())
+                {
+                    analysis = "File-roller has a bug. Move ModLoader.class out of java/lang please.";
+                }
+                else
+                {
+                    analysis = "ModLoader was not installed. You failed.";
+                    swiftKickInTheAss = true;
+                }
+            }
+            else if(missing.equals(""))
+            {
+
+            }
+            else if(Output.contains("wrong name:"))
+            {
+                    analysis = "MCP recompilation error";
+            }
+        }
+        else if(Output.contains("java.lang.UnsatisfiedLinkError"))
+        {
+            analysis = "You have to switch back to Java 6; Java 7 does not include a required library.";
+        }
+        else if(Output.contains("java.lang.SecurityException: SHA-256 digest error"))
+        {
+            analysis = "Failure to delete META-INF.";
+            swiftKickInTheAss = true;
+        }
+        else if(Output.contains("insufficient memory"))
+        {
+            analysis = "Java ran out of memory. Get more RAM. Sorry about that.";
+        }
+        else if(Output.contains("java.lang.IllegalStateException: Only one LWJGL context may be instantiated at any one time.")
+            || Output.contains("org.lwjgl.LWJGLException: Could not create context")
+            )
+        {
+            analysis = "Something went wrong with the rendering. Unknown cause.";
+        }
+        else if(Output.contains("java.io.FileNotFoundException"))
+        {
+            analysis = "Unknown. Maybe you missed a few files when installing the mod.";
+        }
+        else if(Output.contains("Starting minecraft server"))
+        {
+            analysis = "Client mods DO NOT WORK on a server!!!";
+            swiftKickInTheAss = true;
+        }
+        else if(Output.contains("java.io.IOException: Bad packet id 230"))
+        {
+            analysis = "You forgot to install ModLoaderMP. Failure.";
+            swiftKickInTheAss = true;
+        }
+        else if(Output.contains("java.util.zip.ZipException: invalid entry"))
+        {
+            analysis = "You used a bad zip archiver. Use 7zip or WinRAR.";
+            swiftKickInTheAss = true;
+        }
+        else
+        {
+            analysis = "Hm, I can't seem to figure it out.\nIf your client failed to load press Paste Error and show that link to #Risucraft on esper.net";
+        }
         return swiftKickInTheAss;
     }
 }
