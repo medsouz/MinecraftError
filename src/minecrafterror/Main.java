@@ -222,22 +222,22 @@ public class Main{
             analyze.addMouseListener(new MouseAdapter(){
                 @Override
                 public void mouseExited(MouseEvent me){
-                    if (paste.isEnabled() == true) {
-                        paste.setIcon(but1);
+                    if (analyze.isEnabled() == true) {
+                        analyze.setIcon(but1);
                     }
                 }                
 
                 @Override
                 public void mouseEntered(MouseEvent me) {
-                    if (paste.isEnabled() == true) {
-                        paste.setIcon(but2);
+                    if (analyze.isEnabled() == true) {
+                        analyze.setIcon(but2);
                     }
                 }
 
                 @Override
                 public void mousePressed(MouseEvent me) {
-                    if (paste.isEnabled() == true) {
-                        paste.setIcon(but3);
+                    if (analyze.isEnabled() == true) {
+                        analyze.setIcon(but3);
                         analyze();
                         //Sound.CLICK.play();
                     }
@@ -245,8 +245,8 @@ public class Main{
 
                 @Override
                 public void mouseReleased(MouseEvent me) {
-                    if (paste.isEnabled() == true) {
-                        paste.setIcon(but2);
+                    if (analyze.isEnabled() == true) {
+                        analyze.setIcon(but2);
                     }
                 }
             });
@@ -616,6 +616,17 @@ public class Main{
             else
             {
                 textBox.setText("You idiot.\n\n"+reason);
+            }
+        }
+        else
+        {
+            if(Output.isEmpty())
+            {
+                textBox.setText("Run minecraft first!");
+            }
+            else if(SPAMDETECT)
+            {
+                textBox.setText("Whoa, now. Don't be clicking buttons like a madman.");
             }
         }
     }
