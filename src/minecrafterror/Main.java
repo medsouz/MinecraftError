@@ -407,12 +407,12 @@ public class Main{
                 ex.printStackTrace();
             }
         }else{
-                if(Output.isEmpty()){
-                        textBox.setText(textBox.getText()+"It appears that there was no output, this can be caused if you still have Minecraft open when you pressed \"Paste Error\". Try closing Minecraft then try again.\n");
-                }
-                if(SPAMDETECT){
-                        textBox.setText(textBox.getText()+"Whoa! Calm down, it appears that you pressed \"Paste Error\" too many times! Please only press it once and then wait for the link to the pastebin to pop up. Thank you.\n");
-                }
+            if(Output.isEmpty()){
+                textBox.setText(textBox.getText()+"It appears that there was no output, this can be caused if you still have Minecraft open when you pressed \"Paste Error\". Try closing Minecraft then try again.\n");
+            }
+            if(SPAMDETECT){
+                textBox.setText(textBox.getText()+"Whoa! Calm down, it appears that you pressed \"Paste Error\" too many times! Please only press it once and then wait for the link to the pastebin to pop up. Thank you.\n");
+            }
         }
     }
 
@@ -455,17 +455,17 @@ public class Main{
             URLConnection conn = url.openConnection();
             conn.setDoOutput(true);
             OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
-		    writer.write("api_dev_key=00ee7bd5d711b33ec4c1386b32f8e945&api_option=paste&api_paste_code="+contents);
-		    writer.flush();
-		    StringBuilder answer = new StringBuilder();
-		    BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-		    String line;
-		    while ((line = reader.readLine()) != null) {
-		        answer.append(line);
-		    }
-		    writer.close();
-		    reader.close();
-		    textBox.setText(textBox.getText()+answer.toString()+"\n");
+                writer.write("api_dev_key=00ee7bd5d711b33ec4c1386b32f8e945&api_option=paste&api_paste_code="+contents);
+                writer.flush();
+                StringBuilder answer = new StringBuilder();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    answer.append(line);
+                }
+                writer.close();
+                reader.close();
+                textBox.setText(textBox.getText()+answer.toString()+"\n");
         }catch(Exception Err){
             System.out.println(Err.getMessage());
             return;
@@ -485,12 +485,12 @@ public class Main{
                     || Output.contains("java.lang.NoSuchMethodError")
                     )
             {
-                reason = "A mod has the wrong minecraft version. NOTE: You may have to check your mods folder.";
+                reason = "You installed mods with a minecraft version different than the one you're using.";
                 swiftKickInTheAss = true;
             }
             else if(Output.contains("java.lang.StackOverflowError"))
             {
-                reason = "Minecraft had an infinite loop. God help you if you were not testing a mod.";
+                reason = "Minecraft had an infinite loop. If you were not testing a mod...god help you.";
             }
             else if(Output.contains("EXCEPTION_ACCESS_VIOLATION") || Output.contains("SIGSEGV"))
             {
@@ -518,7 +518,7 @@ public class Main{
                     }
                     else
                     {
-                        reason = "ModLoader was not installed.";
+                        reason = "ModLoader was not installed. You failed.";
                         swiftKickInTheAss = true;
                     }
                 }
@@ -526,64 +526,66 @@ public class Main{
                 {
                     
                 }
-                else if(Output.contains("wrong name:")
+                else if(Output.contains("wrong name:"))
                 {
                         reason = "MCP recompilation error";
                 }
             }
             else if(Output.contains("java.lang.UnsatisfiedLinkError"))
             {
-                reason = "Switch back to Java 6; Java 7 does not include a required library.";
+                reason = "You have to switch back to Java 6; Java 7 does not include a required library.";
             }
             else if(Output.contains("java.lang.SecurityException: SHA-256 digest error"))
             {
-                reason = "Failure to delete META-INF";
+                reason = "Failure to delete META-INF.";
                 swiftKickInTheAss = true;
             }
-            else if(Output.contains("insufficient memory")
+            else if(Output.contains("insufficient memory"))
             {
                 reason = "Java ran out of memory. Get more RAM. Sorry about that.";
             }
-            else if(Output.contains("java.lang.IllegalStateException: Only one LWJGL context may be instantiated at any one time."
+            else if(Output.contains("java.lang.IllegalStateException: Only one LWJGL context may be instantiated at any one time.")
                 || Output.contains("org.lwjgl.LWJGLException: Could not create context")
                 )
             {
-				reason = "Something went wrong with the rendering. Unknown cause.";
+                reason = "Something went wrong with the rendering. Unknown cause.";
             }
-            else if(Output.contains("java.io.FileNotFoundException")
+            else if(Output.contains("java.io.FileNotFoundException"))
             {
                 reason = "Unknown. Maybe you missed a few files when installing the mod.";
             }
-            else if(Output.contains("Starting minecraft server")
+            else if(Output.contains("Starting minecraft server"))
             {
-                reason = "Client mods do NOT WORK on a server!!!";
+                reason = "Client mods DO NOT WORK on a server!!!";
                 swiftKickInTheAss = true;
             }
-            else if(Output.contains("java.io.IOException: Bad packet id 230")
+            else if(Output.contains("java.io.IOException: Bad packet id 230"))
             {
-                reason = "Mod missing: ModLoaderMP";
+                reason = "You forgot to install ModLoaderMP. Failure.";
                 swiftKickInTheAss = true;
             }
-            else if(Output.contains("java.util.zip.ZipException: invalid entry")
+            else if(Output.contains("java.util.zip.ZipException: invalid entry"))
             {
-                reason = "Bad zip archiver. Use 7zip or WinRAR.";
+                reason = "You used a bad zip archiver. Use 7zip or WinRAR.";
                 swiftKickInTheAss = true;
             }
             /// SECTION: MODLOADER.TXT
-            if(reason == "")
+            if(reason.isEmpty())
             {
-				try
-				{
-				    byte[] b = new byte[(int) new File(modLoaderPath).length()];
-				    BufferedInputStream f = new BufferedInputStream(new FileInputStream(modLoaderPath));
-				    f.read(b);
-				    contents = contents + new String(b);
-				    f.close();
-				    //one last check to make sure everything worked
-				    if(modLoaderPath.equals("")){
-				        System.out.println("failed");
-				        return;
-				    }
+                String contents = "";
+                try
+                {
+                    String modLoaderPath = getModLoaderPath();
+                    byte[] b = new byte[(int) new File(modLoaderPath).length()];
+                    BufferedInputStream f = new BufferedInputStream(new FileInputStream(modLoaderPath));
+                    f.read(b);
+                    contents += new String(b);
+                    f.close();
+                    //one last check to make sure everything worked
+                    if(modLoaderPath.equals(""))
+                    {
+                        reason = "Analysis failed! Here's the minecraft output again: \n" + Output;
+                    }
                 }
                 catch(java.io.FileNotFoundException e)
                 {}
@@ -593,18 +595,28 @@ public class Main{
                 }
                 if(!contents.isEmpty())
                 {
-                    if(contents.contains("CONFLICT @")
+                    if(contents.contains("CONFLICT @"))
                     {
-                        reason = "Conflicting block IDs. Recommend ID Resolver.");
+                        reason = "Conflicting block IDs. Recommend ID Resolver: \nhttp://www.minecraftforum.net/topic/366377-";
                     }
-                    if(contents.contains("ailed to load mod")
+                    if(contents.contains("ailed to load mod"))
                     {
-                        reason = "A mod failed to load. Double-check everything!");
+                        reason = "A mod failed to load. You may want to double-check that you installed everything right with the right minecraft version.";
                     }
-				}
+                }
+                else
+                {
+                    reason = "Analysis failed! Here's the minecraft output again: \n" + Output;
+                }
             }
-            /// convey the results to the user somehow
-            System.out.println("Detected reason:"+reason);
+            if(!swiftKickInTheAss)
+            {
+                textBox.setText("Here's my guess as to what went wrong: \n\n" + reason);
+            }
+            else
+            {
+                textBox.setText("You idiot.\n\n"+reason);
+            }
         }
     }
 }
