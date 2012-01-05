@@ -1,4 +1,4 @@
-# Download Instructions
+# <font color=red>Download Instructions</font>
 ### Click on "Downloads" above.
 The rest should be obivous.
 
