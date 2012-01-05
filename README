@@ -1,5 +1,12 @@
---=MinecraftError=--
+# Download Instructions
+### Click on "Downloads" above.
+The rest should be obivous.
+
+# About
 This tool is used to find errors with Minecraft mods.
 To use simply run the program and press "Launch Minecraft" and it should log all of your errors.
 
-TODO: Somehow make the code execute without use Process because most people don't have Java installed in their system's PATH variable.
+## Credits
+* medsouz made the original code
+* Malqua made the new GUI
+* Riking made the error analyzer
