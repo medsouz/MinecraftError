@@ -375,7 +375,7 @@ public class Main{
         {
             SPAMDETECT = true;
             analyzePartOne();
-            Output = "Recorded by MinecraftError V24 (https://github.com/medsouz/MinecraftError).\n\nAutomatic analysis: "+analysis+"\n\n"+Output;
+            Output = "Recorded by MinecraftError (https://github.com/medsouz/MinecraftError).\n\nAutomatic analysis: "+analysis+"\n"+Output;
             textBox.setText(textBox.getText()+"\nPosting to pastebin.com...\n");
 
             //Build parameter string
@@ -419,28 +419,28 @@ public class Main{
         }
     }
 
-    public String getModLoaderPath()
+    public String getMinecraftPath()
     {
         if(currentOS == null) setOS();
         if(currentOS.isMac()){
             System.out.println("Mac user!");
-            return System.getProperty("user.home")+"/Library/Application Support/minecraft/ModLoader.txt";
+            return System.getProperty("user.home")+"/Library/Application Support/minecraft/";
         }
         if(currentOS.isLinux()){
             System.out.println("Linux/Unix/Solaris user!");
-            return System.getProperty("user.home")+"/.minecraft/ModLoader.txt";
+            return System.getProperty("user.home")+"/.minecraft/";
         }
         if(currentOS.isWindows()){
             System.out.println("Windows user!");
-            return System.getenv("APPDATA")+"/.minecraft/ModLoader.txt";
+            return System.getenv("APPDATA")+"/.minecraft/";
         }
         throw new RuntimeException("Unknown OS!");
     }
 
     public void pasteModLoaderOutput()
     {
-        String modLoaderPath = getModLoaderPath();
-        String contents = "Recorded by MinecraftError (https://github.com/medsouz/MinecraftError):\n";
+        String modLoaderPath = getMinecraftPath()+"ModLoader.txt";
+        String contents = "Recorded by MinecraftError v2.4 (https://github.com/medsouz/MinecraftError):\n";
         try
         {
             byte[] b = new byte[(int) new File(modLoaderPath).length()];
