@@ -517,6 +517,11 @@ public class Main{
             analysis = "You installed mods with a minecraft version different than the one you're using.";
             swiftKickInTheAss = true;
         }
+        else if(Output.contains("java.lang.SecurityException: SHA"))
+        {
+            analysis = "Failure to delete META-INF.";
+            swiftKickInTheAss = true;
+        }
         else if(Output.contains("java.lang.StackOverflowError"))
         {
             analysis = "Minecraft had an infinite loop. If you were not testing a mod...god help you.";
@@ -564,11 +569,7 @@ public class Main{
         {
             analysis = "You have to switch back to Java 6; Java 7 does not include a required library.";
         }
-        else if(Output.contains("java.lang.SecurityException: SHA-256 digest error"))
-        {
-            analysis = "Failure to delete META-INF.";
-            swiftKickInTheAss = true;
-        }
+
         else if(Output.contains("insufficient memory"))
         {
             analysis = "Java ran out of memory. Get more RAM. Sorry about that.";
