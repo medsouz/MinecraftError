@@ -487,7 +487,7 @@ public class Main{
             }
             else
             {
-                textBox.setText(textBox.getText() + "\n\nYou idiot.\n\n"+analysis);
+                textBox.setText(textBox.getText() + "\n\nWell that one was easy.\n\n"+analysis);
             }
         }
         else
