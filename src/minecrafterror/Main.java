@@ -531,7 +531,7 @@ public class Main{
 
             if(currentOS.isLinux())
             {
-                analysis = "Segmentation fault. Try disabling the FGLRX drivers.";
+                analysis = "Segmentation fault. Try disabling the FGLRX drivers if this is a problem.";
             }
             else
             {
