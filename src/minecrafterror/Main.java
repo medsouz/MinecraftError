@@ -604,30 +604,30 @@ public class Main{
 	    //Modloader.txt
 	    try
 	    {
-		String modLoaderPath = getMinecraftPath()+"ModLoader.txt";
-		byte[] b = new byte[(int) new File(modLoaderPath).length()];
-		BufferedInputStream f = new BufferedInputStream(new FileInputStream(modLoaderPath));
-		f.read(b);
-		String contents = new String(b);
-		f.close();
-		//one last check to make sure everything worked
-		if(modLoaderPath.equals("") || contents.equals(""))
-		{
-		    System.out.println("failed");
-		    //** TODO: popup box, maybe?
-		    unknown=true;
-		}
-		
-		if(output.contains("java.lang.VerifyError")
-		{
-		    analysis = "You installed mods with a minecraft version different than the one you're using.";
-		    swiftKickInTheAss = true;
-		}
-		else
-		{
-		    unknown=true;
-		}
-	    }catch(IOError e)
+			String modLoaderPath = getMinecraftPath()+"ModLoader.txt";
+			byte[] b = new byte[(int) new File(modLoaderPath).length()];
+			BufferedInputStream f = new BufferedInputStream(new FileInputStream(modLoaderPath));
+			f.read(b);
+			String content = new String(b);
+			f.close();
+			//one last check to make sure everything worked
+			if(modLoaderPath.equals("") || content.equals(""))
+			{
+				System.out.println("failed");
+				//** TODO: popup box, maybe?
+				unknown=true;
+			}
+			
+			if(content.contains("java.lang.VerifyError"))
+			{
+				analysis = "You installed mods with a minecraft version different than the one you're using.";
+				swiftKickInTheAss = true;
+			}
+			else
+			{
+				unknown=true;
+			}
+	    }catch(java.io.IOException e)
 	    {
 		unknown = true;
 	    }
