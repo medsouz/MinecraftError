@@ -506,7 +506,7 @@ public class Main{
     {
         analysis = "Hm, I can't seem to figure it out.\nIf your client failed to load press Paste Error and show that link to #Risucraft on esper.net";
         boolean swiftKickInTheAss = false;
-
+	boolean unknown=false;
         /// SECTION: OUTPUT
         if(Output.contains("java.lang.VerifyError")
                 || Output.contains("java.lang.IncompatibleClassChangeError")
@@ -581,7 +581,7 @@ public class Main{
         }
         else if(Output.contains("java.io.FileNotFoundException"))
         {
-            analysis = "Unknown. Maybe you missed a few files when installing the mod.";
+            analysis = "Unknown. Maybe you missed a few config files when installing the mod.";
         }
         else if(Output.contains("Starting minecraft server"))
         {
@@ -598,7 +598,40 @@ public class Main{
             analysis = "You used a bad zip archiver. Use 7zip or WinRAR.";
             swiftKickInTheAss = true;
         }
-        else
+	else
+	{
+	    //Modloader.txt
+	    try
+	    {
+		String modLoaderPath = getMinecraftPath()+"ModLoader.txt";
+		byte[] b = new byte[(int) new File(modLoaderPath).length()];
+		BufferedInputStream f = new BufferedInputStream(new FileInputStream(modLoaderPath));
+		f.read(b);
+		String contents = new String(b);
+		f.close();
+		//one last check to make sure everything worked
+		if(modLoaderPath.equals("") || contents.equals(""))
+		{
+		    System.out.println("failed");
+		    //** TODO: popup box, maybe?
+		    unknown=true;
+		}
+		
+		if(output.contains("java.lang.VerifyError")
+		{
+		    analysis = "You installed mods with a minecraft version different than the one you're using.";
+		    swiftKickInTheAss = true;
+		}
+		else
+		{
+		    unknown=true;
+		}
+	    }catch(IOError e)
+	    {
+		unknown = true;
+	    }
+	}
+	if(unknown || analysis.isEmpty())
         {
             analysis = "Hm, I can't seem to figure it out. If your client failed to load press Paste Error and show that link to #Risucraft on esper.net";
         }
