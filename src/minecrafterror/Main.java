@@ -599,6 +599,14 @@ public class Main{
             analysis = "You used a bad zip archiver. Use 7zip or WinRAR.";
             swiftKickInTheAss = true;
         }
+        else if(Output.contains("java.util.ConcurrentModificationException"))
+        {
+            
+            if(Output.contains("ModLoader.onTick"))
+            {
+            	analysis = "One of the mods is acting up. Tell the author to never remove their mod from the tick list except by returning false."
+            }
+        }
 	else
 	{
 	    //Modloader.txt
