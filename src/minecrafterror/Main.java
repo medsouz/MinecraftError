@@ -94,7 +94,7 @@ public class Main{
             });
         }
         
-        public JTextArea textBox = new JTextArea()        ;
+        public JTextArea textBox = new JTextArea();
         public JFrame frame = new JFrame("MinecraftError");
         public JLabel launch = new JLabel(but1);
         public JLabel paste = new JLabel(but1);
@@ -311,6 +311,8 @@ public class Main{
             textBox.setForeground(Color.black);
             textBox.setMargin(new Insets(5,5,5,0));
             textBox.setEditable(false);
+            DefaultCaret caret = (DefaultCaret)textArea.getCaret();
+            caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
             launch.setSize(212, 40);
             launch.setLocation(30, 410);
@@ -402,7 +404,7 @@ public class Main{
                 reader.close();
 
                 //Output the URL
-                textBox.setText(textBox.getText()+answer.toString()+"\n");
+                textBox.append(answer.toString()+"\n");
 
             } catch (MalformedURLException ex) {
                 ex.printStackTrace();
@@ -411,10 +413,10 @@ public class Main{
             }
         }else{
             if(Output.isEmpty()){
-                textBox.setText(textBox.getText()+"It appears that there was no output, this can be caused if you still have Minecraft open when you pressed \"Paste Error\". Try closing Minecraft then try again.\n");
+                textBox.append("It appears that there was no output, this can be caused if you still have Minecraft open when you pressed \"Paste Error\". Try closing Minecraft then try again.\n");
             }
             if(SPAMDETECT){
-                textBox.setText(textBox.getText()+"Whoa! Calm down, it appears that you pressed \"Paste Error\" too many times! Please only press it once and then wait for the link to the pastebin to pop up. Thank you.\n");
+                textBox.append("Whoa! Calm down, it appears that you pressed \"Paste Error\" too many times! Please only press it once and then wait for the link to the pastebin to pop up. Thank you.\n");
             }
         }
     }
@@ -468,7 +470,7 @@ public class Main{
                 }
                 writer.close();
                 reader.close();
-                textBox.setText(textBox.getText()+answer.toString()+"\n");
+                textBox.append(answer.toString()+"\n");
         }catch(Exception Err){
             System.out.println(Err.getMessage());
             return;
@@ -483,22 +485,22 @@ public class Main{
         {
             if(!assKicking)
             {
-                textBox.setText(textBox.getText() + "\n\nHere's my guess as to what went wrong:\n\n" + analysis);
+                textBox.append("\n\nHere's my guess as to what went wrong:\n\n" + analysis);
             }
             else
             {
-                textBox.setText(textBox.getText() + "\n\nWell that one was easy.\n\n"+analysis);
+                textBox.append("\n\nWell that one was easy.\n\n"+analysis);
             }
         }
         else
         {
             if(Output.isEmpty())
             {
-                textBox.setText(textBox.getText() + "\nThe output's empty. You need to run Minecraft first, and have it close as well.\n");
+                textBox.append("\nThe output's empty. You need to run Minecraft first, and have it close as well.\n");
             }
             else if(SPAMDETECT)
             {
-                textBox.setText(textBox.getText() +"\nWhoa, now. Don't be clicking buttons like a madman.\n");
+                textBox.append("\nWhoa, now. Don't be clicking buttons like a madman.\n");
             }
         }
     }
@@ -546,15 +548,8 @@ public class Main{
 
             if(missing.equals("ModLoader"))
             {
-                if(currentOS.isLinux())
-                {
-                    analysis = "You either did not install ModLoader, or you hit the bug with file-roller.\nMove ModLoader.class out of minecraft.jar/java/lang/ please.";
-                }
-                else
-                {
-                    analysis = "ModLoader was not installed. You failed.";
-                    swiftKickInTheAss = true;
-                }
+                analysis = "ModLoader was not installed.";
+                swiftKickInTheAss = true;
             }
             else if(missing.equals(""))
             {
