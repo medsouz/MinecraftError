@@ -518,6 +518,10 @@ public class Main{
         {
             analysis = "You installed mods with a minecraft version different than the one you're using.";
             swiftKickInTheAss = true;
+            if(Output.contains("mod_Arrows"))
+            {
+            	analysis = "Do not use mods folder for mods that modify base classes.";
+            }
         }
         else if(Output.contains("java.lang.SecurityException: SHA"))
         {
