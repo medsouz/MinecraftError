@@ -23,6 +23,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import javax.swing.BorderFactory;
+import javax.swing.text.DefaultCaret;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -311,7 +312,7 @@ public class Main{
             textBox.setForeground(Color.black);
             textBox.setMargin(new Insets(5,5,5,0));
             textBox.setEditable(false);
-            DefaultCaret caret = (DefaultCaret)textArea.getCaret();
+            DefaultCaret caret = (DefaultCaret)textBox.getCaret();
             caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
             launch.setSize(212, 40);
