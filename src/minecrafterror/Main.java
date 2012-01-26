@@ -603,7 +603,7 @@ public class Main{
             
             if(Output.contains("ModLoader.onTick"))
             {
-            	analysis = "One of the mods is acting up. Tell the author to never remove their mod from the tick list except by returning false."
+            	analysis = "One of the mods is acting up. Tell the author to never remove their mod from the tick list except by returning false.";
             }
         }
 	else
