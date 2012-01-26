@@ -519,7 +519,10 @@ public class Main{
         {
             analysis = "You installed mods with a minecraft version different than the one you're using.";
             swiftKickInTheAss = true;
-            if(Output.contains("mod_Arrows"))
+			// TODO: improve checking for bad mods folder
+            if(Output.contains("mod_Arrows.load()")
+				|| false
+				)
             {
             	analysis = "Do not use mods folder for mods that modify base classes.";
             }
