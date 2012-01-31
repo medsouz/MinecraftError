@@ -1,5 +1,5 @@
 # Download Instructions
-### Click on "Downloads" above.
+### Click on "Downloads" above and to the right.
 The rest should be obivous.
 
 # About
