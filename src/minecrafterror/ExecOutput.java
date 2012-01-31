@@ -1,6 +1,14 @@
 package minecrafterror;
-import java.io.*;
-import java.net.*;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+
 public class ExecOutput implements Runnable {
 
     private javax.swing.JTextArea jTextArea1;
@@ -13,7 +21,7 @@ public class ExecOutput implements Runnable {
     @Override
     public void run() {
         String output = "";
-        // Get launcher jar
+        //Get launcher jar
         File Launcher = new File(mcopy.getMinecraftPath()+"minecrafterr.jar");
         jTextArea1.setText("Checking for Minecraft launcher (minecrafterr.jar) in "+Launcher.getAbsolutePath()+"\n");
         if(!Launcher.exists()){
