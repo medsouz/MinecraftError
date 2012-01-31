@@ -41,24 +41,15 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class Main{
         
         //IMAGES//
-        public Image bg = Toolkit.getDefaultToolkit().getImage(
-                        this.getClass().getResource("/minecrafterror/resources/Background.png"));
-        public Image bu1 = Toolkit.getDefaultToolkit().getImage(
-                        this.getClass().getResource("/minecrafterror/resources/Button.png"));
-        public Image bu2 = Toolkit.getDefaultToolkit().getImage(
-                        this.getClass().getResource("/minecrafterror/resources/Selected.png"));
-        public Image bu3 = Toolkit.getDefaultToolkit().getImage(
-                        this.getClass().getResource("/minecrafterror/resources/Pressed.png"));
-        public Image about = Toolkit.getDefaultToolkit().getImage(
-                        this.getClass().getResource("/minecrafterror/resources/about.png"));
-        public Image q = Toolkit.getDefaultToolkit().getImage(
-                        this.getClass().getResource("/minecrafterror/resources/question.png"));
-        public Image o = Toolkit.getDefaultToolkit().getImage(
-                        this.getClass().getResource("/minecrafterror/resources/options.png"));
-        public Image p = Toolkit.getDefaultToolkit().getImage(
-                        this.getClass().getResource("/minecrafterror/resources/play.png"));
-        public Image c = Toolkit.getDefaultToolkit().getImage(
-                        this.getClass().getResource("/minecrafterror/resources/copy.png"));
+        public Image bg = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/minecrafterror/resources/Background.png"));
+        public Image bu1 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/minecrafterror/resources/Button.png"));
+        public Image bu2 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/minecrafterror/resources/Selected.png"));
+        public Image bu3 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/minecrafterror/resources/Pressed.png"));
+        public Image about = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/minecrafterror/resources/about.png"));
+        public Image q = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/minecrafterror/resources/question.png"));
+        public Image o = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/minecrafterror/resources/options.png"));
+        public Image p = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/minecrafterror/resources/play.png"));
+        public Image c = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/minecrafterror/resources/copy.png"));
 
         public ImageIcon copy = new ImageIcon(c);
         public ImageIcon play = new ImageIcon(p);
