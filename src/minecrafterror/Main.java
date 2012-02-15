@@ -606,29 +606,45 @@ public class Main{
 	    //Modloader.txt
 	    try
 	    {
-			String modLoaderPath = getMinecraftPath()+"ModLoader.txt";
-			byte[] b = new byte[(int) new File(modLoaderPath).length()];
-			BufferedInputStream f = new BufferedInputStream(new FileInputStream(modLoaderPath));
-			f.read(b);
-			String content = new String(b);
-			f.close();
-			//one last check to make sure everything worked
-			if(modLoaderPath.equals("") || content.equals(""))
+		String modLoaderPath = getMinecraftPath()+"ModLoader.txt";
+		byte[] b = new byte[(int) new File(modLoaderPath).length()];
+		BufferedInputStream f = new BufferedInputStream(new FileInputStream(modLoaderPath));
+		f.read(b);
+		String content = new String(b);
+		f.close();
+		//one last check to make sure everything worked
+		if(modLoaderPath.equals("") || content.equals(""))
+		{
+			System.out.println("failed");
+			//** TODO: popup box, maybe?
+			unknown=true;
+		}
+		
+		if(content.contains("java.lang.VerifyError"))
+		{
+			analysis = "You installed mods with a minecraft version different than the one you're using.";
+			swiftKickInTheAss = true;
+		}
+		if(Output.contains("Failed to load mod"))
+		{
+			if(content.contains("java.lang.NoClassDefFoundError")
 			{
-				System.out.println("failed");
-				//** TODO: popup box, maybe?
-				unknown=true;
-			}
-			
-			if(content.contains("java.lang.VerifyError"))
-			{
-				analysis = "You installed mods with a minecraft version different than the one you're using.";
-				swiftKickInTheAss = true;
+				if(content.contains("java.lang.NoClassDefFoundError: forge"/*.ITextureProvider*/)
+				{
+					analysis = "Missing forge! Download: http://www.minecraftforum.net/topic/514000-";
+				}
+				else
+				{
+					
+				}
 			}
 			else
 			{
-				unknown=true;
+				analysis = "Hm, I can't seem to figure it out. If your client failed to load press Paste ModLoader.txt and show that link to #Risucraft on esper.net";
+				// unknown=true;
 			}
+		} 
+
 	    }catch(java.io.IOException e)
 	    {
 		unknown = true;
