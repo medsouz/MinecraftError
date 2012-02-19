@@ -550,9 +550,10 @@ public class Main{
                 analysis = "ModLoader was not installed.";
                 swiftKickInTheAss = true;
             }
-            else if(missing.equals(""))
+            else if(missing.contains("forge"))
             {
-
+            	analysis = "Forge was not installed";
+                swiftKickInTheAss = true;
             }
             else if(Output.contains("wrong name:"))
             {
