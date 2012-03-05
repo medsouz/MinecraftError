@@ -12,6 +12,6 @@ To use simply run the program and press "Launch Minecraft" and it should log all
 * Riking made the error analyzer
 
 #### build command
-cd src
-javac minecrafterror/*.java
+cd src<br>
+javac minecrafterror/*.java<br>
 jar cvfe ../MCErrorV25.jar minecrafterror.Main .
