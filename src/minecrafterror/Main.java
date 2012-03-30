@@ -98,10 +98,13 @@ public class Main{
         public OSType currentOS;
         public Main inst;
         public String analysis;
+        
+        public String customPath = "";
                         
         public Main()
         {
             inst = this;
+            setOS();
             InputStream in = getClass().getResourceAsStream("/minecrafterror/resources/VolterGoldfish.ttf");
             try {
                 Volt = Font.createFont(Font.TRUETYPE_FONT, in);
@@ -261,8 +264,42 @@ public class Main{
             JMenuItem Paste = new JMenuItem("Paste Error", copy);
             File.add(Paste);
 
-            JMenuItem Options = new JMenuItem("Options", options);
-            File.add(Options);
+            JMenuItem FolderChange = new JMenuItem("Change Folder", options);
+            File.add(FolderChange);
+            FolderChange.addMouseListener(new MouseAdapter(){
+                @Override
+                public void mousePressed(MouseEvent me) {
+                    localpane=JOptionPane("Enter the new minecraft folder path. Leave empty for default.",
+                        JOptionPane.QUESTION_MESSAGE);
+                    String newpath = localpane.showInputDialog(frame,
+                        "Enter the new minecraft folder path. Leave empty for default.",
+                        getMinecraftPath()); 
+                    if(newpath.isEmpty())
+                    {
+                        this.customPath = "";
+                        return;
+                    }
+                    File testf = new File(newpath);
+                    if(testf.exists() && testf.isDirectory())
+                    {
+                        this.customPath = newpath;
+                    }
+                    else if(!testf.isDirectory())
+                    {
+                        JOptionPane.showMessageDialog(frame,
+                            "The path given is not a folder.",
+                            "Error",
+                            WARNING_MESSAGE);
+                    }
+                    else
+                    {
+                        JOptionPane.showMessageDialog(frame,
+                            "The path given does not exist.",
+                            "Error",
+                            WARNING_MESSAGE);
+                    }
+                }
+            });
             File.addSeparator();
 
             JMenuItem Exit = new JMenuItem("Exit");
@@ -350,7 +387,6 @@ public class Main{
             frame.setJMenuBar(menu);
             frame.setVisible(true);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            setOS();
         }
         public void setOS()
         {
@@ -416,6 +452,10 @@ public class Main{
     public String getMinecraftPath()
     {
         if(currentOS == null) setOS();
+        if(!customPath.isEmpty())
+        {
+            return customPath;
+        }
         if(currentOS.isMac()){
             System.out.println("Mac user!");
             return System.getProperty("user.home")+"/Library/Application Support/minecraft/";
