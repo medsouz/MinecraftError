@@ -269,34 +269,32 @@ public class Main{
             FolderChange.addMouseListener(new MouseAdapter(){
                 @Override
                 public void mousePressed(MouseEvent me) {
-                    localpane=JOptionPane("Enter the new minecraft folder path. Leave empty for default.",
-                        JOptionPane.QUESTION_MESSAGE);
-                    String newpath = localpane.showInputDialog(frame,
+                    String newpath = JOptionPane.showInputDialog(frame,
                         "Enter the new minecraft folder path. Leave empty for default.",
                         getMinecraftPath()); 
                     if(newpath.isEmpty())
                     {
-                        this.customPath = "";
+                        customPath = "";
                         return;
                     }
                     File testf = new File(newpath);
                     if(testf.exists() && testf.isDirectory())
                     {
-                        this.customPath = newpath;
+                        customPath = newpath;
                     }
                     else if(!testf.isDirectory())
                     {
                         JOptionPane.showMessageDialog(frame,
                             "The path given is not a folder.",
                             "Error",
-                            WARNING_MESSAGE);
+                            JOptionPane.WARNING_MESSAGE);
                     }
                     else
                     {
                         JOptionPane.showMessageDialog(frame,
                             "The path given does not exist.",
                             "Error",
-                            WARNING_MESSAGE);
+                            JOptionPane.WARNING_MESSAGE);
                     }
                 }
             });
@@ -668,9 +666,9 @@ public class Main{
 		}
 		if(Output.contains("Failed to load mod"))
 		{
-			if(content.contains("java.lang.NoClassDefFoundError")
+			if(content.contains("java.lang.NoClassDefFoundError"))
 			{
-				if(content.contains("java.lang.NoClassDefFoundError: forge"/*.ITextureProvider*/)
+				if(content.contains("java.lang.NoClassDefFoundError: forge"/*.ITextureProvider*/))
 				{
 					analysis = "Missing forge! Download: http://www.minecraftforum.net/topic/514000-";
 				}
