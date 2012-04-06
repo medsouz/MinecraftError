@@ -672,9 +672,9 @@ public class Main{
 				{
 					analysis = "Missing forge! Download: http://www.minecraftforum.net/topic/514000-";
 				}
-				else
+				else if(content.contains("java.lang.NoClassDefFoundError: BaseModMp"))
 				{
-					
+					analysis = "Missing ModLoader Multiplayer! Download: http://www.minecraftforum.net/topic/86765-/";
 				}
 			}
 			else
