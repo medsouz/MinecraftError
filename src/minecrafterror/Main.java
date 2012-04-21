@@ -264,13 +264,13 @@ public class Main{
             JMenuItem Paste = new JMenuItem("Paste Error", copy);
             File.add(Paste);
 
-            JMenuItem FolderChange = new JMenuItem("Change Folder", options);
+            JMenuItem FolderChange = new JMenuItem("Change Launcher", options);
             File.add(FolderChange);
             FolderChange.addMouseListener(new MouseAdapter(){
                 @Override
                 public void mousePressed(MouseEvent me) {
                     String newpath = JOptionPane.showInputDialog(frame,
-                        "Enter the new minecraft folder path. Leave empty for default.",
+                        "Enter the new launcher path. Leave empty for default.\nNote: MCError does not work with some custom launchers.",
                         getMinecraftPath()); 
                     if(newpath.isEmpty())
                     {
@@ -278,14 +278,14 @@ public class Main{
                         return;
                     }
                     File testf = new File(newpath);
-                    if(testf.exists() && testf.isDirectory())
+                    if(testf.exists() && testf.isFile())
                     {
                         customPath = newpath;
                     }
-                    else if(!testf.isDirectory())
+                    else if(!testf.isFile())
                     {
                         JOptionPane.showMessageDialog(frame,
-                            "The path given is not a folder.",
+                            "The path given is not a file.",
                             "Error",
                             JOptionPane.WARNING_MESSAGE);
                     }
@@ -456,7 +456,7 @@ public class Main{
         }
         if(currentOS.isMac()){
             System.out.println("Mac user!");
-            return System.getProperty("user.home")+"/Library/Application Support/minecraft/";
+            return System.getProperty("user.home")+"/Library/Application\ Support/minecraft/";
         }
         if(currentOS.isLinux()){
             System.out.println("Linux/Unix/Solaris user!");
