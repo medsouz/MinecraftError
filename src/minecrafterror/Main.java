@@ -456,7 +456,7 @@ public class Main{
         }
         if(currentOS.isMac()){
             System.out.println("Mac user!");
-            return System.getProperty("user.home")+"/Library/Application\ Support/minecraft/";
+            return System.getProperty("user.home")+"/Library/Application\\ Support/minecraft/";
         }
         if(currentOS.isLinux()){
             System.out.println("Linux/Unix/Solaris user!");
