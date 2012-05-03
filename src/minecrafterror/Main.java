@@ -669,7 +669,8 @@ public class Main{
 			analysis = "You installed mods with a minecraft version different than the one you're using.";
 			swiftKickInTheAss = true;
 		}
-		if(Output.contains("Failed to load mod"))
+		if(   Output.contains("Failed to load mod")
+		   || Output.contains("Exception in thread"))
 		{
 			if(content.contains("java.lang.NoClassDefFoundError"))
 			{
