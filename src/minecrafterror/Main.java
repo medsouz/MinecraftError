@@ -593,6 +593,11 @@ public class Main{
             	analysis = "Forge was not installed";
                 swiftKickInTheAss = true;
             }
+            else if(missing.contains("buildcraft"))
+            {
+            	analysis = "Buildcraft was not installed";
+            	swiftKickInTheAss = true;
+            }
             else if(Output.contains("wrong name:"))
             {
                     analysis = "MCP recompilation error";
@@ -675,6 +680,10 @@ public class Main{
 				else if(content.contains("java.lang.NoClassDefFoundError: BaseModMp"))
 				{
 					analysis = "Missing ModLoader Multiplayer! Download: http://www.minecraftforum.net/topic/86765-/";
+				}
+				else if(content.contains("java.lang.NoClassDefFoundError: buildcraft"))
+				{
+					analysis = "Missing Buildcraft, or, the load order was incorrect. Download: http://www.mod-buildcraft.com/ \nTo the mod author: Look into BaseMod.getPriorities().";
 				}
 			}
 			else
