@@ -50,7 +50,8 @@ public class ExecOutput implements Runnable {
         try{
             System.out.println(System.getProperty("os.name"));
             // Run launcher in new process
-            Process pr = Runtime.getRuntime().exec(System.getProperty("java.home")+"/bin/java -Ddebug=full -cp "+mcopy.getMinecraftPath()+"minecrafterr.jar net.minecraft.LauncherFrame");
+            // Process pr = Runtime.getRuntime().exec(System.getProperty("java.home")+"/bin/java -Ddebug=full -cp "+mcopy.getMinecraftPath()+"minecrafterr.jar net.minecraft.LauncherFrame");
+            Process pr = Runtime.getRuntime().exec(new String[] {System.getProperty("java.home")+"/bin/java", "-Ddebug=full", "-cp", mcopy.getMinecraftPath()+"minecrafterr.jar", "net.minecraft.LauncherFrame"});
             // Grab output
             BufferedReader out = new BufferedReader(new InputStreamReader(pr.getInputStream()));
             BufferedReader outERR = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
