@@ -539,11 +539,10 @@ public class Main{
         analysis = "Hm, I can't seem to figure it out.\nIf your client failed to load press Paste Error and show that link to #Risucraft on esper.net";
         boolean swiftKickInTheAss = false;
 	boolean unknown=false;
-        /// SECTION: OUTPUT
+        /// SECTION: OUTPUT]
         if(Output.contains("java.lang.VerifyError")
                 || Output.contains("java.lang.IncompatibleClassChangeError")
                 || Output.contains("java.lang.NoSuchFieldError")
-                || Output.contains("java.lang.NoSuchMethodError")
                 )
         {
             analysis = "You installed mods with a minecraft version different than the one you're using.";
@@ -554,6 +553,16 @@ public class Main{
 				)
             {
             	analysis = "Do not use mods folder for mods that modify base classes.";
+            }
+        }
+        else if(Output.contains("java.lang.NoSuchMethodError"))
+        {
+            analysis = "You installed mods with a minecraft version different than the one you're using.";
+            swiftKickInTheAss = true;
+            if(Output.contains("mod_MinecraftForge") && Output.contains("getSaveFolder"))
+            {
+                analysis = "You need to install Forge **AFTER** you install ModLoader.";
+                swiftKickInTheAss = false;
             }
         }
         else if(Output.contains("java.lang.SecurityException: SHA"))
