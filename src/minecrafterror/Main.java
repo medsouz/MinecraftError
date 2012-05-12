@@ -539,7 +539,7 @@ public class Main{
         analysis = "Hm, I can't seem to figure it out.\nIf your client failed to load press Paste Error and show that link to #Risucraft on esper.net";
         boolean swiftKickInTheAss = false;
 	boolean unknown=false;
-        /// SECTION: OUTPUT]
+        /// SECTION: OUTPUT
         if(Output.contains("java.lang.VerifyError")
                 || Output.contains("java.lang.IncompatibleClassChangeError")
                 || Output.contains("java.lang.NoSuchFieldError")
