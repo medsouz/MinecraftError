@@ -500,7 +500,7 @@ public class Main{
                 }
                 writer.close();
                 reader.close();
-                textBox.append(answer.toString()+"\n");
+                textBox.append("\n"+answer.toString()+"\n");
         }catch(Exception Err){
             System.out.println(Err.getMessage());
             return;
@@ -606,6 +606,10 @@ public class Main{
             {
             	analysis = "Buildcraft was not installed";
             	swiftKickInTheAss = true;
+            }
+            else if(missing.contains("PlayerBase"))
+            {
+                analysis = "PlayerAPI was not installed. Download link: http://www.minecraftforum.net/topic/738498-/";
             }
             else if(Output.contains("wrong name:"))
             {
