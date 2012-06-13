@@ -592,9 +592,14 @@ public class Main{
             int pos2 = Output.indexOf("\n", pos);
             String missing = Output.substring(pos, pos2);
 
-            if(missing.equals("ModLoader"))
+            if(missing.contains("ModLoader"))
             {
                 analysis = "ModLoader was not installed.";
+                swiftKickInTheAss = true;
+            }
+            else if(missing.contains("EntityRendererProxy"))
+            {
+            	analysis = "ModLoader was not installed. Please install Risugami's ModLoader.";
                 swiftKickInTheAss = true;
             }
             else if(missing.contains("forge"))
