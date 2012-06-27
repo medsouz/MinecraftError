@@ -663,6 +663,13 @@ public class Main{
             	analysis = "One of the mods is acting up. Tell the author to never remove their mod from the tick list except by returning false.";
             }
         }
+        else if(Output.contains("Unable to initialize OpenAL.  Probable cause: OpenAL not supported"))
+        {
+            if(currentOS.isWindows())
+            {
+                analysis = "OpenAL is not installed correctly.\nTo fix it, please download and run <a href=\"http://connect.creativelabs.com/openal/Downloads/oalinst.zip\">the official OpenAL installer</a>.";
+            }
+        }
 	else
 	{
 	    //Modloader.txt
