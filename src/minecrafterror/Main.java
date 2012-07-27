@@ -542,7 +542,6 @@ public class Main{
         /// SECTION: OUTPUT
         if(Output.contains("java.lang.VerifyError")
                 || Output.contains("java.lang.IncompatibleClassChangeError")
-                || Output.contains("java.lang.NoSuchFieldError")
                 )
         {
             analysis = "You installed mods with a minecraft version different than the one you're using.";
@@ -563,6 +562,16 @@ public class Main{
             {
                 analysis = "You need to install Forge **AFTER** you install ModLoader.";
                 swiftKickInTheAss = false;
+            }
+        }
+        else if(Output.contains("java.lang.NoSuchFieldError"))
+        {
+            analysis = "You installed mods with a minecraft version different than the one you're using.";
+            swiftKickInTheAss = true;
+            if(Output.contains("NoSuchFieldError: PLAYER"))
+            {
+                //analysis = "You need to install Forge **AFTER** you install ModLoader.";
+                //swiftKickInTheAss = false;
             }
         }
         else if(Output.contains("java.lang.SecurityException: SHA"))
