@@ -48,6 +48,12 @@ public class ExecOutput implements Runnable {
         jTextArea1.setText(jTextArea1.getText()+"Minecraft launcher found!"+"\n");
         jTextArea1.setText(jTextArea1.getText()+"Starting launcher..."+"\n");
         try{
+            output = output+"-------------Contents of mods folder:-------------"+"\n";
+            jTextArea1.setText(jTextArea1.getText()+"-------------Contents of mods folder:-------------"+"\n");
+            output =output+modsFolderContents(mcopy.getMinecraftPath()+"/mods")+"\n";
+            jTextArea1.setText(jTextArea1.getText()+modsFolderContents(mcopy.getMinecraftPath()+"/mods")+"\n");
+            output = output+"--------------------------------------------------"+"\n";
+            jTextArea1.setText(jTextArea1.getText()+"--------------------------------------------------"+"\n");
             System.out.println(System.getProperty("os.name"));
             // Run launcher in new process
             // Process pr = Runtime.getRuntime().exec(System.getProperty("java.home")+"/bin/java -Ddebug=full -cp "+mcopy.getMinecraftPath()+"minecrafterr.jar net.minecraft.LauncherFrame");
@@ -75,5 +81,49 @@ public class ExecOutput implements Runnable {
         jTextArea1.setText(jTextArea1.getText()+"Error report complete.");
         jTextArea1.setCaretPosition(jTextArea1.getText().length() - 1);
         mcopy.analyze(); // Auto-analyze
+    }
+    
+    public String modsFolderContents(String path) {
+    	String contents = "";
+    	File folder = new File(path);
+    	for(int i = 0; i < folder.listFiles().length; i++){
+    		File f = folder.listFiles()[i];
+    		if(f.isDirectory()){
+    			if(!contents.equals("")){
+    				contents = contents + ", " + getDirContents(f, f.getName());//new method for recursion
+    			}else{
+    				contents = getDirContents(f, f.getName());
+    			}
+    		}else{
+    			if(!contents.equals("")){
+    				contents = contents + ", " + f.getName();
+    			}else{
+    				contents = f.getName();
+    			}
+    		}
+    		
+    	}
+    	return contents;
+    }
+    
+    private String getDirContents(File dir, String path){
+    	String contents = "";
+    	for(int i = 0; i < dir.listFiles().length; i++){
+    		File f = dir.listFiles()[i];
+    		if(f.isDirectory()){
+    			if(!contents.equals("")){
+    				contents = contents + ", " + getDirContents(f, path + "/" + f.getName());
+    			}else{
+    				contents = getDirContents(f, path + "/" + f.getName());
+    			}
+    		}else{
+    			if(!contents.equals("")){
+    				contents = contents +", "+path+"/"+f.getName();
+    			}else{
+    				contents = path+"/"+f.getName();
+    			}
+    		}
+    	}
+    	return contents;
     }
 }
