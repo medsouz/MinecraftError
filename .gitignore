@@ -10,3 +10,5 @@ manifest.mf
 minecrafterr.jar
 .metadata/
 /build/
+MCErrorV*.jar
+MCErrorV*.exe
