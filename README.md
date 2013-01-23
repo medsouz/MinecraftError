@@ -1,7 +1,7 @@
 # Instructions
-1. Click on "Downloads" above and to the right, under "Graphs".
-2. Download the latest .jar or .exe file
-3. Run MCErrorVxx.jar by double-clicking on it.
+1. Download the latest version at https://s3.amazonaws.com/MCError/latest/MCError-latest.jar
+2. For old versions, download at https://s3.amazonaws.com/MCError/MCErrorV##.jar, where ## is the version number (20,23-32 are available).
+3. Run MCErrorVxx.jar by double-clicking on it in its folder.
  * If you need to, right-click -> open with -> Java Runtime.
 4. Click "Launch Minecraft" to start Minecraft.
 5. At this point, if you are on a Mac, please click Issues above and paste what you get.
