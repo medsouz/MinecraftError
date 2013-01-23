@@ -419,6 +419,7 @@ public class Main {
 
 	private void initializeAnalyzers() {
 		analyzers.add(new AnalyzerDefault());
+		// Make sure Default is always first!
 		analyzers.add(new AnalyzerVersionMismatch()
 				.addTrigger("java.lang.VerifyError")
 				.addTrigger("java.lang.IncompatibleClassChangeError")
@@ -523,20 +524,48 @@ public class Main {
 		// TODO: Forge log checking
 	}
 
+	/**
+	 * Analyzes the given Minecraft output's Java exceptions and reports its
+	 * guess on the problem.
+	 * 
+	 * @param output
+	 * @return
+	 */
 	public AnalysisResult analyze(String output) {
-		Output = output; // TODO, temporary measure for pastebin()
 		ArrayList<AnalysisResult> results = new ArrayList<AnalysisResult>();
 		for (IErrorAnalyzer an : analyzers) {
 			if (an.applies(output)) {
 				results.add(an.getResult(output));
 			}
 		}
-		// TODO
+		// Debug
 		for (AnalysisResult res : results) {
-			System.out.println(Boolean.toString(res.isSilly()) + ": "
-					+ res.getMessage());
+			System.out.println("Debug: " + Boolean.toString(res.isSilly())
+					+ ": " + res.getMessage());
 		}
-		return results.get(results.size() - 1);
+		// If no other results (size = 1), get the first one
+		// Otherwise, get the second one
+		AnalysisResult conclusion = (results.size() > 1) ? (results.get(1))
+				: (results.get(0));
+		return conclusion;
+	}
+
+	/**
+	 * Called from ExecOutput, performs analysis then writes results to the text
+	 * box
+	 * 
+	 * @param output
+	 */
+	public void autoAnalyze(String output) {
+		Output = output; // TODO, temporary measure for pastebin()
+		AnalysisResult result = analyze(output);
+		textBox.append("\n\n");
+		textBox.append((result.isSilly()) ? "Well that one was easy."
+				: "Here's what I think went wrong:");
+		textBox.append("\n\n");
+		textBox.append(result.getMessage());
+		textBox.append("\n");
+		textBox.setCaretPosition(textBox.getText().length()-1);
 	}
 
 	public String getMinecraftPath() {

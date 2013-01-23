@@ -94,6 +94,7 @@ public class ExecOutput implements Runnable {
 			BufferedReader outERR = new BufferedReader(new InputStreamReader(
 					pr.getErrorStream()));
 			String line = "";
+			// TODO: Grab only stderr when Forge is going
 			while ((line = out.readLine()) != null
 					|| (line = outERR.readLine()) != null) {
 				if (line.contains("Setting user: ")) {
@@ -104,18 +105,18 @@ public class ExecOutput implements Runnable {
 					 */
 				}
 				output = output + line + "\n";
-				jTextArea1.setText(jTextArea1.getText() + line + "\n");
+				jTextArea1.append(line + "\n");
 				jTextArea1.setCaretPosition(jTextArea1.getText().length() - 1);
 			}
 		} catch (IOException e) {
-			jTextArea1.setText(jTextArea1.getText() + e.getMessage() + "\n");
+			jTextArea1.append("[MCError: An exception has occured while retrieving Minecraft's output.]\n" + e.getMessage() + "\n");
 			jTextArea1.setCaretPosition(jTextArea1.getText().length() - 1);
 		}
 		// set output
 		Main.SPAMDETECT = false;
 		jTextArea1.setText(jTextArea1.getText() + "Error report complete.");
 		jTextArea1.setCaretPosition(jTextArea1.getText().length() - 1);
-		mcopy.analyze(output); // Auto-analyze
+		mcopy.autoAnalyze(output); // Auto-analyze
 	}
 
 	public String modsFolderContents(String path) {
