@@ -124,7 +124,7 @@ public class Main {
 
 	public Main() {
 		inst = this;
-		setOS();
+		currentOS = OSType.getOS();
 		InputStream in = getClass().getResourceAsStream(
 				"/minecrafterror/resources/VolterGoldfish.ttf");
 		try {
@@ -406,18 +406,6 @@ public class Main {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
-	public void setOS() {
-		String os = System.getProperty("os.name").toLowerCase();
-		if (os.startsWith("win"))
-			currentOS = OSType.WINDOWS;
-		else if (os.startsWith("mac"))
-			currentOS = OSType.MAC;
-		else if (os.contains("nix") || os.contains("nux"))
-			currentOS = OSType.LINUX;
-		else if (os.contains("solaris"))
-			currentOS = OSType.SOLARIS;
-	}
-
 	public void pastebin() {
 		if (!SPAMDETECT && !Output.isEmpty()) {
 			SPAMDETECT = true;
@@ -473,7 +461,7 @@ public class Main {
 
 	public String getMinecraftPath() {
 		if (currentOS == null)
-			setOS();
+			currentOS = OSType.getOS();
 		if (!customPath.isEmpty()) {
 			return customPath;
 		}
