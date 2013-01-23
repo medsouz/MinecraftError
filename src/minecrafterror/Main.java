@@ -21,6 +21,7 @@ import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.text.DefaultCaret;
@@ -39,6 +40,12 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import minecrafterror.analysis.AnalysisResult;
+import minecrafterror.analysis.AnalyzerDefault;
+import minecrafterror.analysis.AnalyzerNCDFE;
+import minecrafterror.analysis.AnalyzerSegfault;
+import minecrafterror.analysis.AnalyzerSimple;
+import minecrafterror.analysis.AnalyzerVersionMismatch;
+import minecrafterror.analysis.IErrorAnalyzer;
 
 public class Main {
 
@@ -118,11 +125,14 @@ public class Main {
 
 	public String customMcPath = "";
 	static String Output = "";
-	static boolean SPAMDETECT = false;
+	static volatile boolean SPAMDETECT = false;
+
+	public ArrayList<IErrorAnalyzer> analyzers = new ArrayList<IErrorAnalyzer>();
 
 	public Main() {
 		instance = this;
 		currentOS = OSType.getOS();
+
 		InputStream in = getClass().getResourceAsStream(
 				"/minecrafterror/resources/VolterGoldfish.ttf");
 		try {
@@ -256,7 +266,7 @@ public class Main {
 			public void mousePressed(MouseEvent me) {
 				if (buttonReanalyze.isEnabled() == true) {
 					buttonReanalyze.setIcon(iconButton3);
-					analyze();
+					analyze(Output);
 					// Sound.CLICK.play();
 				}
 			}
@@ -403,174 +413,130 @@ public class Main {
 		frame.setJMenuBar(menu);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		initializeAnalyzers();
 	}
 
-	public void analyze() {
-		AnalysisResult result = analyzePartOne();
-		if (!SPAMDETECT && !Output.isEmpty()) {
-			if (!result.isSilly()) {
-				textBox.append("\n\nHere's my guess as to what went wrong:\n\n"
-						+ result.getMessage());
-			} else {
-				textBox.append("\n\nWell that one was easy.\n\n"
-						+ result.getMessage());
-			}
-		} else {
-			if (Output.isEmpty()) {
-				textBox.append("\nThe output's empty. You need to run Minecraft first, and have it close as well.\n");
-			} else if (SPAMDETECT) {
-				textBox.append("\nWhoa, now. Don't be clicking buttons like a madman.\n");
-			}
+	private void initializeAnalyzers() {
+		analyzers.add(new AnalyzerDefault());
+		analyzers.add(new AnalyzerVersionMismatch()
+				.addTrigger("java.lang.VerifyError")
+				.addTrigger("java.lang.IncompatibleClassChangeError")
+				.addTrigger("java.lang.NoSuchMethodError")
+				.addTrigger("java.lang.NoSuchFieldError"));
+		{
+			AnalyzerNCDFE a = new AnalyzerNCDFE();
+			a.addClass("ModLoader",
+					"You need to install ModLoader or Minecraft Forge.");
+			a.addClass("EntityRendererProxy",
+					"You need to install ModLoader or Minecraft Forge.");
+			a.addClass("forge", "You need to install Minecraft Forge.");
+			a.addClass("PlayerBase", "You need to install PlayerAPI.");
+			a.addClass("de.matthiasmann.twl", "You need to install GuiApi.");
+			a.addClass("buildcraft",
+					"An addon mod was missing a dependency: BuildCraft.");
+			a.addClass("ic2",
+					"An addon mod was missing a dependency: IndustrialCraft 2.");
+			analyzers.add(a);
 		}
+		analyzers.add(new AnalyzerSimple("java.lang.SecurityException: SHA",
+				"Failure to delete META-INF.", true));
+		analyzers
+				.add(new AnalyzerSegfault(
+						"Segmentation fault. Try disabling the FGLRX drivers.",
+						"Segmentation fault. I can't really help on this one, but try checking your graphics drivers."));
+		analyzers
+				.add(new AnalyzerSimple(
+						"java.lang.IllegalStateException: Only one LWJGL context may be instantiated at any one time.",
+						"Something went wrong with the rendering. Unknown cause.",
+						false));
+		analyzers.add(new AnalyzerSimple(
+				"org.lwjgl.LWJGLException: Could not create context",
+				"Something went wrong with the rendering. Unknown cause.",
+				false));
+		analyzers.add(new AnalyzerSimple(
+				"java.util.zip.ZipException: invalid entry",
+				"You used a bad zip archiver. Use 7zip or WinRAR.", true));
+
+		analyzers
+				.add(new AnalyzerSimple(
+						"java.io.IOException: Bad packet id 230",
+						"You attempted to connect to a ModloaderMP server without MLMP installed.",
+						true));
+		analyzers.add(new AnalyzerSimple("Starting minecraft server",
+				"Client mods do not work on a server!", true));
+		// OSOnly(Windows)
+		analyzers
+				.add(new AnalyzerSimple(
+						"Unable to initialize OpenAL.  Probable cause: OpenAL not supported",
+						"OpenAL is not installed correctly.\nTo fix it, please download and run the official OpenAL installer from http://connect.creativelabs.com/openal/Downloads/oalinst.zip .",
+						false));
+		analyzers
+				.add(new AnalyzerSimple(
+						"java.io.FileNotFoundException",
+						"Unknown. Maybe you missed a few config files when installing the mod.",
+						false));
+		analyzers
+				.add(new AnalyzerSimple(
+						"insufficient memory",
+						"Java ran out of memory. Upgrade your RAM, or increase your paging file size.",
+						false));
+		analyzers
+				.add(new AnalyzerSimple(
+						"java.lang.UnsatisfiedLinkError",
+						"You have to switch back to Java 6; Java 7 does not include a required library.",
+						false));
+		analyzers
+				.add(new AnalyzerSimple(
+						"java.lang.StackOverflowError",
+						"Minecraft had an infinite loop. Please check the above output for hints as to the cause, and contact the relevant mod authors.",
+						false));
+		// TODO: Modloader.txt checking
+		/*
+		 * try { String modLoaderPath = getMinecraftPath() + "ModLoader.txt";
+		 * byte[] b = new byte[(int) new File(modLoaderPath).length()];
+		 * BufferedInputStream f = new BufferedInputStream( new
+		 * FileInputStream(modLoaderPath)); f.read(b); String content = new
+		 * String(b); f.close(); // one last check to make sure everything
+		 * worked if (modLoaderPath.equals("") || content.equals("")) {
+		 * System.out.println("failed"); unknown = true; }
+		 * 
+		 * if (content.contains("java.lang.VerifyError")) { analysis =
+		 * "You installed mods with a minecraft version different than the one you're using."
+		 * ; sillyMistake = true; } if (Output.contains("Failed to load mod") ||
+		 * Output.contains("Exception in thread")) { if
+		 * (content.contains("java.lang.NoClassDefFoundError")) { if (content
+		 * .contains("java.lang.NoClassDefFoundError: forge" { analysis =
+		 * "Missing forge! Download: http://www.minecraftforum.net/topic/514000-"
+		 * ; } else if (content
+		 * .contains("java.lang.NoClassDefFoundError: BaseModMp")) { analysis =
+		 * "Missing ModLoader Multiplayer! Download: http://www.minecraftforum.net/topic/86765-/"
+		 * ; } else if (content
+		 * .contains("java.lang.NoClassDefFoundError: buildcraft")) { analysis =
+		 * "Missing Buildcraft, or, the load order was incorrect. Download: http://www.mod-buildcraft.com/ \nTo the mod author: Look into BaseMod.getPriorities()."
+		 * ; } } else { analysis =
+		 * "Hm, I can't seem to figure it out. If your client failed to load press Paste ModLoader.txt and show that link to #Risucraft on esper.net"
+		 * ; // unknown=true; } }
+		 * 
+		 * } catch (java.io.IOException e) { unknown = true; }
+		 */
+		// TODO: Forge log checking
 	}
 
-	private AnalysisResult analyzePartOne() {
-		String analysis = "";
-		boolean sillyMistake = false;
-		boolean unknown = false;
-		// / SECTION: OUTPUT
-		if (Output.contains("java.lang.VerifyError")
-				|| Output.contains("java.lang.IncompatibleClassChangeError")) {
-			analysis = "You installed mods with a minecraft version different than the one you're using.";
-			sillyMistake = true;
-			// TODO: improve checking for bad mods folder
-			if (Output.contains("mod_Arrows.load()") || false) {
-				analysis = "Do not use mods folder for mods that modify base classes.";
-			}
-		} else if (Output.contains("java.lang.NoSuchMethodError")) {
-			analysis = "You installed mods with a minecraft version different than the one you're using.";
-			sillyMistake = true;
-			if (Output.contains("mod_MinecraftForge")
-					&& Output.contains("getSaveFolder")) {
-				analysis = "You need to install Forge **AFTER** you install ModLoader.";
-				sillyMistake = false;
-			}
-		} else if (Output.contains("java.lang.NoSuchFieldError")) {
-			analysis = "You installed mods with a minecraft version different than the one you're using.";
-			sillyMistake = true;
-			if (Output.contains("NoSuchFieldError: PLAYER")) {
-				// analysis =
-				// "You need to install Forge **AFTER** you install ModLoader.";
-				// swiftKickInTheAss = false;
-			}
-		} else if (Output.contains("java.lang.SecurityException: SHA")) {
-			analysis = "Failure to delete META-INF.";
-			sillyMistake = true;
-		} else if (Output.contains("java.lang.StackOverflowError")) {
-			analysis = "Minecraft had an infinite loop. If you were not testing a mod...god help you.";
-		} else if (Output.contains("EXCEPTION_ACCESS_VIOLATION")
-				|| Output.contains("SIGSEGV")) {
-
-			if (currentOS.isLinux()) {
-				analysis = "Segmentation fault. Try disabling the FGLRX drivers if this is a problem.";
-			} else {
-				analysis = "Segmentation fault. Check your graphics drivers.";
-			}
-		} else if (Output.contains("java.lang.NoClassDefFoundError")) {
-			int pos = Output.indexOf("java.lang.NoClassDefFoundError") + 32;
-			int pos2 = Output.indexOf("\n", pos);
-			String missing = Output.substring(pos, pos2);
-
-			if (missing.contains("ModLoader")) {
-				analysis = "ModLoader was not installed.";
-				sillyMistake = true;
-			} else if (missing.contains("EntityRendererProxy")) {
-				analysis = "ModLoader was not installed. Please install Risugami's ModLoader.";
-				sillyMistake = true;
-			} else if (missing.contains("forge")) {
-				analysis = "Forge was not installed";
-				sillyMistake = true;
-			} else if (missing.contains("buildcraft")) {
-				analysis = "Buildcraft was not installed";
-				sillyMistake = true;
-			} else if (missing.contains("PlayerBase")) {
-				analysis = "PlayerAPI was not installed. Download link: http://www.minecraftforum.net/topic/738498-/";
-			} else if (Output.contains("wrong name:")) {
-				analysis = "MCP recompilation error";
-			}
-		} else if (Output.contains("java.lang.UnsatisfiedLinkError")) {
-			analysis = "You have to switch back to Java 6; Java 7 does not include a required library.";
-		}
-
-		else if (Output.contains("insufficient memory")) {
-			analysis = "Java ran out of memory. Get more RAM. Sorry about that.";
-		} else if (Output
-				.contains("java.lang.IllegalStateException: Only one LWJGL context may be instantiated at any one time.")
-				|| Output
-						.contains("org.lwjgl.LWJGLException: Could not create context")) {
-			analysis = "Something went wrong with the rendering. Unknown cause.";
-		} else if (Output.contains("java.io.FileNotFoundException")) {
-			analysis = "Unknown. Maybe you missed a few config files when installing the mod.";
-		} else if (Output.contains("Starting minecraft server")) {
-			analysis = "Client mods DO NOT WORK on a server!!!";
-			sillyMistake = true;
-		} else if (Output.contains("java.io.IOException: Bad packet id 230")) {
-			analysis = "You forgot to install ModLoaderMP. Failure.";
-			sillyMistake = true;
-		} else if (Output.contains("java.util.zip.ZipException: invalid entry")) {
-			analysis = "You used a bad zip archiver. Use 7zip or WinRAR.";
-			sillyMistake = true;
-		} else if (Output.contains("java.util.ConcurrentModificationException")) {
-
-			if (Output.contains("ModLoader.onTick")) {
-				analysis = "One of the mods is acting up. Tell the author to never remove their mod from the tick list except by returning false.";
-			}
-		} else if (Output
-				.contains("Unable to initialize OpenAL.  Probable cause: OpenAL not supported")) {
-			if (currentOS.isWindows()) {
-				analysis = "OpenAL is not installed correctly.\nTo fix it, please download and run <a href=\"http://connect.creativelabs.com/openal/Downloads/oalinst.zip\">the official OpenAL installer</a>.";
-			}
-		} else {
-			// Modloader.txt
-			try {
-				String modLoaderPath = getMinecraftPath() + "ModLoader.txt";
-				byte[] b = new byte[(int) new File(modLoaderPath).length()];
-				BufferedInputStream f = new BufferedInputStream(
-						new FileInputStream(modLoaderPath));
-				f.read(b);
-				String content = new String(b);
-				f.close();
-				// one last check to make sure everything worked
-				if (modLoaderPath.equals("") || content.equals("")) {
-					System.out.println("failed");
-					// ** TODO: popup box, maybe?
-					unknown = true;
-				}
-
-				if (content.contains("java.lang.VerifyError")) {
-					analysis = "You installed mods with a minecraft version different than the one you're using.";
-					sillyMistake = true;
-				}
-				if (Output.contains("Failed to load mod")
-						|| Output.contains("Exception in thread")) {
-					if (content.contains("java.lang.NoClassDefFoundError")) {
-						if (content
-								.contains("java.lang.NoClassDefFoundError: forge"/*
-																				 * .
-																				 * ITextureProvider
-																				 */)) {
-							analysis = "Missing forge! Download: http://www.minecraftforum.net/topic/514000-";
-						} else if (content
-								.contains("java.lang.NoClassDefFoundError: BaseModMp")) {
-							analysis = "Missing ModLoader Multiplayer! Download: http://www.minecraftforum.net/topic/86765-/";
-						} else if (content
-								.contains("java.lang.NoClassDefFoundError: buildcraft")) {
-							analysis = "Missing Buildcraft, or, the load order was incorrect. Download: http://www.mod-buildcraft.com/ \nTo the mod author: Look into BaseMod.getPriorities().";
-						}
-					} else {
-						analysis = "Hm, I can't seem to figure it out. If your client failed to load press Paste ModLoader.txt and show that link to #Risucraft on esper.net";
-						// unknown=true;
-					}
-				}
-
-			} catch (java.io.IOException e) {
-				unknown = true;
+	public AnalysisResult analyze(String output) {
+		Output = output; // TODO, temporary measure for pastebin()
+		ArrayList<AnalysisResult> results = new ArrayList<AnalysisResult>();
+		for (IErrorAnalyzer an : analyzers) {
+			if (an.applies(output)) {
+				results.add(an.getResult(output));
 			}
 		}
-		if (unknown || analysis.isEmpty()) {
-			analysis = "Hm, I can't seem to figure it out. If your client failed to load press Paste Error and show that link to #Risucraft on esper.net";
+		// TODO
+		for (AnalysisResult res : results) {
+			System.out.println(Boolean.toString(res.isSilly()) + ": "
+					+ res.getMessage());
 		}
-		return new AnalysisResult(analysis, sillyMistake);
+		return results.get(results.size() - 1);
 	}
 
 	public String getMinecraftPath() {
@@ -598,15 +564,15 @@ public class Main {
 	public void pastebin() {
 		if (!SPAMDETECT && !Output.isEmpty()) {
 			SPAMDETECT = true;
-			AnalysisResult result = analyzePartOne();
-			Output = "Recorded by MinecraftError (https://github.com/medsouz/MinecraftError).\n\nAutomatic analysis: "
+			AnalysisResult result = analyze(Output);
+			String paste = "Recorded by MinecraftError (https://github.com/medsouz/MinecraftError).\n\nAutomatic analysis: "
 					+ result.getMessage() + "\n" + Output;
 			textBox.setText(textBox.getText()
 					+ "\nPosting to pastebin.com...\n");
 
 			// Build parameter string
 			String data = "api_dev_key=00ee7bd5d711b33ec4c1386b32f8e945&api_option=paste&api_paste_code="
-					+ Output;
+					+ paste;
 			try {
 				// Send the request
 				URL url = new URL("http://pastebin.com/api/api_post.php");
@@ -638,6 +604,17 @@ public class Main {
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
+			new Thread() {
+				@Override
+				public void run() {
+					try {
+						Thread.sleep(650);
+					} catch (InterruptedException e) {
+						// Do nothing
+					}
+					SPAMDETECT = false;
+				}
+			}.start();
 		} else {
 			if (Output.isEmpty()) {
 				textBox.append("It appears that there was no output, this can be caused if you still have Minecraft open when you pressed \"Paste Error\". Try closing Minecraft then try again.\n");
