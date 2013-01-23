@@ -38,6 +38,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import minecrafterror.analysis.AnalysisResult;
+
 public class Main {
 
 	// IMAGES//
@@ -522,13 +524,13 @@ public class Main {
 	}
 
 	public void analyze() {
-		boolean assKicking = analyzePartOne();
+		AnalysisResult result = analyzePartOne();
 		if (!SPAMDETECT && !Output.isEmpty()) {
-			if (!assKicking) {
+			if (!result.isSilly()) {
 				textBox.append("\n\nHere's my guess as to what went wrong:\n\n"
-						+ analysis);
+						+ result.getMessage());
 			} else {
-				textBox.append("\n\nWell that one was easy.\n\n" + analysis);
+				textBox.append("\n\nWell that one was easy.\n\n" + result.getMessage());
 			}
 		} else {
 			if (Output.isEmpty()) {
@@ -539,30 +541,30 @@ public class Main {
 		}
 	}
 
-	private boolean analyzePartOne() {
-		analysis = "Hm, I can't seem to figure it out.\nIf your client failed to load press Paste Error and show that link to #Risucraft on esper.net";
-		boolean swiftKickInTheAss = false;
+	private AnalysisResult analyzePartOne() {
+		String analysis = "";
+		boolean sillyMistake = false;
 		boolean unknown = false;
 		// / SECTION: OUTPUT
 		if (Output.contains("java.lang.VerifyError")
 				|| Output.contains("java.lang.IncompatibleClassChangeError")) {
 			analysis = "You installed mods with a minecraft version different than the one you're using.";
-			swiftKickInTheAss = true;
+			sillyMistake = true;
 			// TODO: improve checking for bad mods folder
 			if (Output.contains("mod_Arrows.load()") || false) {
 				analysis = "Do not use mods folder for mods that modify base classes.";
 			}
 		} else if (Output.contains("java.lang.NoSuchMethodError")) {
 			analysis = "You installed mods with a minecraft version different than the one you're using.";
-			swiftKickInTheAss = true;
+			sillyMistake = true;
 			if (Output.contains("mod_MinecraftForge")
 					&& Output.contains("getSaveFolder")) {
 				analysis = "You need to install Forge **AFTER** you install ModLoader.";
-				swiftKickInTheAss = false;
+				sillyMistake = false;
 			}
 		} else if (Output.contains("java.lang.NoSuchFieldError")) {
 			analysis = "You installed mods with a minecraft version different than the one you're using.";
-			swiftKickInTheAss = true;
+			sillyMistake = true;
 			if (Output.contains("NoSuchFieldError: PLAYER")) {
 				// analysis =
 				// "You need to install Forge **AFTER** you install ModLoader.";
@@ -570,7 +572,7 @@ public class Main {
 			}
 		} else if (Output.contains("java.lang.SecurityException: SHA")) {
 			analysis = "Failure to delete META-INF.";
-			swiftKickInTheAss = true;
+			sillyMistake = true;
 		} else if (Output.contains("java.lang.StackOverflowError")) {
 			analysis = "Minecraft had an infinite loop. If you were not testing a mod...god help you.";
 		} else if (Output.contains("EXCEPTION_ACCESS_VIOLATION")
@@ -588,16 +590,16 @@ public class Main {
 
 			if (missing.contains("ModLoader")) {
 				analysis = "ModLoader was not installed.";
-				swiftKickInTheAss = true;
+				sillyMistake = true;
 			} else if (missing.contains("EntityRendererProxy")) {
 				analysis = "ModLoader was not installed. Please install Risugami's ModLoader.";
-				swiftKickInTheAss = true;
+				sillyMistake = true;
 			} else if (missing.contains("forge")) {
 				analysis = "Forge was not installed";
-				swiftKickInTheAss = true;
+				sillyMistake = true;
 			} else if (missing.contains("buildcraft")) {
 				analysis = "Buildcraft was not installed";
-				swiftKickInTheAss = true;
+				sillyMistake = true;
 			} else if (missing.contains("PlayerBase")) {
 				analysis = "PlayerAPI was not installed. Download link: http://www.minecraftforum.net/topic/738498-/";
 			} else if (Output.contains("wrong name:")) {
@@ -618,13 +620,13 @@ public class Main {
 			analysis = "Unknown. Maybe you missed a few config files when installing the mod.";
 		} else if (Output.contains("Starting minecraft server")) {
 			analysis = "Client mods DO NOT WORK on a server!!!";
-			swiftKickInTheAss = true;
+			sillyMistake = true;
 		} else if (Output.contains("java.io.IOException: Bad packet id 230")) {
 			analysis = "You forgot to install ModLoaderMP. Failure.";
-			swiftKickInTheAss = true;
+			sillyMistake = true;
 		} else if (Output.contains("java.util.zip.ZipException: invalid entry")) {
 			analysis = "You used a bad zip archiver. Use 7zip or WinRAR.";
-			swiftKickInTheAss = true;
+			sillyMistake = true;
 		} else if (Output.contains("java.util.ConcurrentModificationException")) {
 
 			if (Output.contains("ModLoader.onTick")) {
@@ -654,7 +656,7 @@ public class Main {
 
 				if (content.contains("java.lang.VerifyError")) {
 					analysis = "You installed mods with a minecraft version different than the one you're using.";
-					swiftKickInTheAss = true;
+					sillyMistake = true;
 				}
 				if (Output.contains("Failed to load mod")
 						|| Output.contains("Exception in thread")) {
@@ -685,6 +687,6 @@ public class Main {
 		if (unknown || analysis.isEmpty()) {
 			analysis = "Hm, I can't seem to figure it out. If your client failed to load press Paste Error and show that link to #Risucraft on esper.net";
 		}
-		return swiftKickInTheAss;
+		return new AnalysisResult(analysis,sillyMistake);
 	}
 }

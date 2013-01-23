@@ -5,7 +5,7 @@ read version
 mkdir -p buildtemp/minecrafterror/resources
 echo "Compiling"
 # compile
-javac -d buildtemp/ src/minecrafterror/*.java
+javac -d buildtemp/ src/minecrafterror/*.java src/minecrafterror/analysis/*.java
 if [ $? -ne 0 ]
 then
 	exit 1 # on build fail
