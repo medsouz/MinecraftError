@@ -42,53 +42,6 @@ import minecrafterror.analysis.AnalysisResult;
 
 public class Main {
 
-	// IMAGES//
-	public Image bg = Toolkit.getDefaultToolkit().getImage(
-			this.getClass().getResource(
-					"/minecrafterror/resources/Background.png"));
-	public Image bu1 = Toolkit.getDefaultToolkit()
-			.getImage(
-					this.getClass().getResource(
-							"/minecrafterror/resources/Button.png"));
-	public Image bu2 = Toolkit.getDefaultToolkit().getImage(
-			this.getClass().getResource(
-					"/minecrafterror/resources/Selected.png"));
-	public Image bu3 = Toolkit.getDefaultToolkit().getImage(
-			this.getClass()
-					.getResource("/minecrafterror/resources/Pressed.png"));
-	public Image about = Toolkit.getDefaultToolkit().getImage(
-			this.getClass().getResource("/minecrafterror/resources/about.png"));
-	public Image q = Toolkit.getDefaultToolkit().getImage(
-			this.getClass().getResource(
-					"/minecrafterror/resources/question.png"));
-	public Image o = Toolkit.getDefaultToolkit().getImage(
-			this.getClass()
-					.getResource("/minecrafterror/resources/options.png"));
-	public Image p = Toolkit.getDefaultToolkit().getImage(
-			this.getClass().getResource("/minecrafterror/resources/play.png"));
-	public Image c = Toolkit.getDefaultToolkit().getImage(
-			this.getClass().getResource("/minecrafterror/resources/copy.png"));
-
-	public ImageIcon copy = new ImageIcon(c);
-	public ImageIcon play = new ImageIcon(p);
-	public ImageIcon options = new ImageIcon(o);
-	public ImageIcon question = new ImageIcon(q);
-	public ImageIcon aboat = new ImageIcon(about.getScaledInstance(60, 60,
-			Image.SCALE_SMOOTH));
-	public ImageIcon but1 = new ImageIcon(bu1);
-	public ImageIcon but2 = new ImageIcon(bu2);
-	public ImageIcon but3 = new ImageIcon(bu3);
-	public ImageIcon but1b = new ImageIcon(bu1.getScaledInstance(232, 40,
-			Image.SCALE_SMOOTH));
-	public ImageIcon but2b = new ImageIcon(bu2.getScaledInstance(232, 40,
-			Image.SCALE_SMOOTH));
-	public ImageIcon but3b = new ImageIcon(bu3.getScaledInstance(232, 40,
-			Image.SCALE_SMOOTH));
-	static String Output = "";
-	static boolean SPAMDETECT = false;
-
-	//
-
 	public static void main(String args[]) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -109,23 +62,66 @@ public class Main {
 		});
 	}
 
+	public Image imageBackground = Toolkit.getDefaultToolkit().getImage(
+			this.getClass().getResource(
+					"/minecrafterror/resources/Background.png"));
+	public Image imageButton1 = Toolkit.getDefaultToolkit()
+			.getImage(
+					this.getClass().getResource(
+							"/minecrafterror/resources/Button.png"));
+	public Image imageButton2 = Toolkit.getDefaultToolkit().getImage(
+			this.getClass().getResource(
+					"/minecrafterror/resources/Selected.png"));
+	public Image imageButton3 = Toolkit.getDefaultToolkit().getImage(
+			this.getClass()
+					.getResource("/minecrafterror/resources/Pressed.png"));
+	public Image imageAbout = Toolkit.getDefaultToolkit().getImage(
+			this.getClass().getResource("/minecrafterror/resources/about.png"));
+	public Image imageQuestion = Toolkit.getDefaultToolkit().getImage(
+			this.getClass().getResource(
+					"/minecrafterror/resources/question.png"));
+	public Image imageOptions = Toolkit.getDefaultToolkit().getImage(
+			this.getClass()
+					.getResource("/minecrafterror/resources/options.png"));
+	public Image imagePlay = Toolkit.getDefaultToolkit().getImage(
+			this.getClass().getResource("/minecrafterror/resources/play.png"));
+
+	public Image imageCopy = Toolkit.getDefaultToolkit().getImage(
+			this.getClass().getResource("/minecrafterror/resources/copy.png"));
+	public ImageIcon iconCopy = new ImageIcon(imageCopy);
+	public ImageIcon iconPlay = new ImageIcon(imagePlay);
+	public ImageIcon iconOptions = new ImageIcon(imageOptions);
+	public ImageIcon iconQuestion = new ImageIcon(imageQuestion);
+	public ImageIcon iconAbout = new ImageIcon(imageAbout.getScaledInstance(60,
+			60, Image.SCALE_SMOOTH));
+	public ImageIcon iconButton1 = new ImageIcon(imageButton1);
+	public ImageIcon iconButton2 = new ImageIcon(imageButton2);
+	public ImageIcon iconButton3 = new ImageIcon(imageButton3);
+	public ImageIcon iconButtonScaled1 = new ImageIcon(
+			imageButton1.getScaledInstance(232, 40, Image.SCALE_SMOOTH));
+	public ImageIcon iconButtonScaled2 = new ImageIcon(
+			imageButton2.getScaledInstance(232, 40, Image.SCALE_SMOOTH));
+	public ImageIcon iconButtonScaled3 = new ImageIcon(
+			imageButton3.getScaledInstance(232, 40, Image.SCALE_SMOOTH));
+
 	public JTextArea textBox = new JTextArea();
 	public JFrame frame = new JFrame("MinecraftError");
-	public JLabel launch = new JLabel(but1);
-	public JLabel paste = new JLabel(but1);
-	public JLabel pasteML = new JLabel(but1b);
-	public JLabel analyze = new JLabel(but1);
+	public JLabel buttonLaunch = new JLabel(iconButton1);
+	public JLabel buttonPaste = new JLabel(iconButton1);
+	public JLabel buttonReanalyze = new JLabel(iconButton1);
+	public JLabel buttonPasteML = new JLabel(iconButtonScaled1);
 	public JMenuBar menu = new JMenuBar();
 	public Font Volt;
 
 	public OSType currentOS;
-	public Main inst;
-	public String analysis;
+	public Main instance;
 
-	public String customPath = "";
+	public String customMcPath = "";
+	static String Output = "";
+	static boolean SPAMDETECT = false;
 
 	public Main() {
-		inst = this;
+		instance = this;
 		currentOS = OSType.getOS();
 		InputStream in = getClass().getResourceAsStream(
 				"/minecrafterror/resources/VolterGoldfish.ttf");
@@ -144,26 +140,26 @@ public class Main {
 		@SuppressWarnings("unused")
 		Font VolterL = Volt.deriveFont(32F);
 
-		launch.addMouseListener(new MouseAdapter() {
+		buttonLaunch.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseExited(MouseEvent me) {
-				if (launch.isEnabled() == true) {
-					launch.setIcon(but1);
+			public void mouseEntered(MouseEvent me) {
+				if (buttonLaunch.isEnabled() == true) {
+					buttonLaunch.setIcon(iconButton2);
 				}
 			}
 
 			@Override
-			public void mouseEntered(MouseEvent me) {
-				if (launch.isEnabled() == true) {
-					launch.setIcon(but2);
+			public void mouseExited(MouseEvent me) {
+				if (buttonLaunch.isEnabled() == true) {
+					buttonLaunch.setIcon(iconButton1);
 				}
 			}
 
 			@Override
 			public void mousePressed(MouseEvent me) {
-				if (launch.isEnabled() == true) {
-					launch.setIcon(but3);
-					ExecOutput mc = new ExecOutput(textBox, inst);
+				if (buttonLaunch.isEnabled() == true) {
+					buttonLaunch.setIcon(iconButton3);
+					ExecOutput mc = new ExecOutput(textBox, instance);
 					Thread t = new Thread(mc);
 					t.start();
 					// Sound.CLICK.play();
@@ -172,31 +168,31 @@ public class Main {
 
 			@Override
 			public void mouseReleased(MouseEvent me) {
-				if (launch.isEnabled() == true) {
-					launch.setIcon(but2);
+				if (buttonLaunch.isEnabled() == true) {
+					buttonLaunch.setIcon(iconButton2);
 				}
 			}
 		});
 
-		paste.addMouseListener(new MouseAdapter() {
+		buttonPaste.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseExited(MouseEvent me) {
-				if (paste.isEnabled() == true) {
-					paste.setIcon(but1);
+			public void mouseEntered(MouseEvent me) {
+				if (buttonPaste.isEnabled() == true) {
+					buttonPaste.setIcon(iconButton2);
 				}
 			}
 
 			@Override
-			public void mouseEntered(MouseEvent me) {
-				if (paste.isEnabled() == true) {
-					paste.setIcon(but2);
+			public void mouseExited(MouseEvent me) {
+				if (buttonPaste.isEnabled() == true) {
+					buttonPaste.setIcon(iconButton1);
 				}
 			}
 
 			@Override
 			public void mousePressed(MouseEvent me) {
-				if (paste.isEnabled() == true) {
-					paste.setIcon(but3);
+				if (buttonPaste.isEnabled() == true) {
+					buttonPaste.setIcon(iconButton3);
 					pastebin();
 					// Sound.CLICK.play();
 				}
@@ -204,31 +200,31 @@ public class Main {
 
 			@Override
 			public void mouseReleased(MouseEvent me) {
-				if (paste.isEnabled() == true) {
-					paste.setIcon(but2);
+				if (buttonPaste.isEnabled() == true) {
+					buttonPaste.setIcon(iconButton2);
 				}
 			}
 		});
 
-		pasteML.addMouseListener(new MouseAdapter() {
+		buttonPasteML.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseExited(MouseEvent me) {
-				if (pasteML.isEnabled() == true) {
-					pasteML.setIcon(but1b);
+			public void mouseEntered(MouseEvent me) {
+				if (buttonPasteML.isEnabled() == true) {
+					buttonPasteML.setIcon(iconButtonScaled2);
 				}
 			}
 
 			@Override
-			public void mouseEntered(MouseEvent me) {
-				if (pasteML.isEnabled() == true) {
-					pasteML.setIcon(but2b);
+			public void mouseExited(MouseEvent me) {
+				if (buttonPasteML.isEnabled() == true) {
+					buttonPasteML.setIcon(iconButtonScaled1);
 				}
 			}
 
 			@Override
 			public void mousePressed(MouseEvent me) {
-				if (pasteML.isEnabled() == true) {
-					pasteML.setIcon(but3b);
+				if (buttonPasteML.isEnabled() == true) {
+					buttonPasteML.setIcon(iconButtonScaled3);
 					pasteModLoaderOutput();
 					// Sound.CLICK.play();
 				}
@@ -236,30 +232,30 @@ public class Main {
 
 			@Override
 			public void mouseReleased(MouseEvent me) {
-				if (paste.isEnabled() == true) {
-					paste.setIcon(but2b);
+				if (buttonPaste.isEnabled() == true) {
+					buttonPaste.setIcon(iconButtonScaled2);
 				}
 			}
 		});
-		analyze.addMouseListener(new MouseAdapter() {
+		buttonReanalyze.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseExited(MouseEvent me) {
-				if (analyze.isEnabled() == true) {
-					analyze.setIcon(but1);
+			public void mouseEntered(MouseEvent me) {
+				if (buttonReanalyze.isEnabled() == true) {
+					buttonReanalyze.setIcon(iconButton2);
 				}
 			}
 
 			@Override
-			public void mouseEntered(MouseEvent me) {
-				if (analyze.isEnabled() == true) {
-					analyze.setIcon(but2);
+			public void mouseExited(MouseEvent me) {
+				if (buttonReanalyze.isEnabled() == true) {
+					buttonReanalyze.setIcon(iconButton1);
 				}
 			}
 
 			@Override
 			public void mousePressed(MouseEvent me) {
-				if (analyze.isEnabled() == true) {
-					analyze.setIcon(but3);
+				if (buttonReanalyze.isEnabled() == true) {
+					buttonReanalyze.setIcon(iconButton3);
 					analyze();
 					// Sound.CLICK.play();
 				}
@@ -267,29 +263,29 @@ public class Main {
 
 			@Override
 			public void mouseReleased(MouseEvent me) {
-				if (analyze.isEnabled() == true) {
-					analyze.setIcon(but2);
+				if (buttonReanalyze.isEnabled() == true) {
+					buttonReanalyze.setIcon(iconButton2);
 				}
 			}
 		});
 
 		JMenu File = new JMenu("File");
 
-		JMenuItem Launch = new JMenuItem("Launch Minecraft", play);
+		JMenuItem Launch = new JMenuItem("Launch Minecraft", iconPlay);
 		File.add(Launch);
 		Launch.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent me) {
-				ExecOutput mc = new ExecOutput(textBox, inst);
+				ExecOutput mc = new ExecOutput(textBox, instance);
 				Thread t = new Thread(mc);
 				t.start();
 			}
 		});
 
-		JMenuItem Paste = new JMenuItem("Paste Error", copy);
+		JMenuItem Paste = new JMenuItem("Paste Error", iconCopy);
 		File.add(Paste);
 
-		JMenuItem FolderChange = new JMenuItem("Change Launcher", options);
+		JMenuItem FolderChange = new JMenuItem("Change Launcher", iconOptions);
 		File.add(FolderChange);
 		FolderChange.addMouseListener(new MouseAdapter() {
 			@Override
@@ -300,12 +296,12 @@ public class Main {
 								"Enter the new launcher path. Leave empty for default.\nNote: MCError does not work with some custom launchers.",
 								getMinecraftPath());
 				if (newpath.isEmpty()) {
-					customPath = "";
+					customMcPath = "";
 					return;
 				}
 				File testf = new File(newpath);
 				if (testf.exists() && testf.isFile()) {
-					customPath = newpath;
+					customMcPath = newpath;
 				} else if (!testf.isFile()) {
 					JOptionPane.showMessageDialog(frame,
 							"The path given is not a file.", "Error",
@@ -330,7 +326,7 @@ public class Main {
 
 		JMenu Help = new JMenu("Help");
 
-		JMenuItem About = new JMenuItem("About", question);
+		JMenuItem About = new JMenuItem("About", iconQuestion);
 		Help.add(About);
 		About.addMouseListener(new MouseAdapter() {
 			@Override
@@ -339,7 +335,8 @@ public class Main {
 						.showMessageDialog(
 								frame,
 								"Created by medsouz for the sole purpose of easily logging Minecraft's outputs and errors.\nGUI created by Malqua.\nAnalysis created by Riking for easy diagnosis.",
-								"About", JOptionPane.QUESTION_MESSAGE, aboat);
+								"About", JOptionPane.QUESTION_MESSAGE,
+								iconAbout);
 			}
 		});
 
@@ -360,33 +357,33 @@ public class Main {
 		DefaultCaret caret = (DefaultCaret) textBox.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
-		launch.setSize(212, 40);
-		launch.setLocation(30, 410);
-		launch.setHorizontalTextPosition(JLabel.CENTER);
-		launch.setText("Launch Minecraft");
-		launch.setForeground(Color.white);
-		launch.setFont(VolterT);
+		buttonLaunch.setSize(212, 40);
+		buttonLaunch.setLocation(30, 410);
+		buttonLaunch.setHorizontalTextPosition(JLabel.CENTER);
+		buttonLaunch.setText("Launch Minecraft");
+		buttonLaunch.setForeground(Color.white);
+		buttonLaunch.setFont(VolterT);
 
-		paste.setSize(212, 40);
-		paste.setLocation(350, 365);
-		paste.setHorizontalTextPosition(JLabel.CENTER);
-		paste.setText("Paste Error");
-		paste.setForeground(Color.white);
-		paste.setFont(VolterT);
+		buttonPaste.setSize(212, 40);
+		buttonPaste.setLocation(350, 365);
+		buttonPaste.setHorizontalTextPosition(JLabel.CENTER);
+		buttonPaste.setText("Paste Error");
+		buttonPaste.setForeground(Color.white);
+		buttonPaste.setFont(VolterT);
 
-		pasteML.setSize(232, 40);
-		pasteML.setLocation(340, 410);
-		pasteML.setHorizontalTextPosition(JLabel.CENTER);
-		pasteML.setText("Paste ModLoader.txt");
-		pasteML.setForeground(Color.white);
-		pasteML.setFont(VolterT);
+		buttonPasteML.setSize(232, 40);
+		buttonPasteML.setLocation(340, 410);
+		buttonPasteML.setHorizontalTextPosition(JLabel.CENTER);
+		buttonPasteML.setText("Paste ModLoader.txt");
+		buttonPasteML.setForeground(Color.white);
+		buttonPasteML.setFont(VolterT);
 
-		analyze.setSize(232, 40);
-		analyze.setLocation(340, 455);
-		analyze.setHorizontalTextPosition(JLabel.CENTER);
-		analyze.setText("Re-analyze Error");
-		analyze.setForeground(Color.white);
-		analyze.setFont(VolterT);
+		buttonReanalyze.setSize(232, 40);
+		buttonReanalyze.setLocation(340, 455);
+		buttonReanalyze.setHorizontalTextPosition(JLabel.CENTER);
+		buttonReanalyze.setText("Re-analyze Error");
+		buttonReanalyze.setForeground(Color.white);
+		buttonReanalyze.setFont(VolterT);
 
 		menu.add(File);
 		menu.add(Help);
@@ -395,132 +392,17 @@ public class Main {
 				this.getClass().getResource(
 						"/minecrafterror/resources/icon.png")));
 		frame.setLocationRelativeTo(null);
-		frame.setContentPane(new JLabel(new ImageIcon(bg)));
+		frame.setContentPane(new JLabel(new ImageIcon(imageBackground)));
 		frame.setSize(600, 555);
 		frame.setResizable(false);
-		frame.add(paste);
-		frame.add(pasteML);
-		frame.add(launch);
+		frame.add(buttonPaste);
+		frame.add(buttonPasteML);
+		frame.add(buttonLaunch);
 		frame.add(scroll);
-		frame.add(analyze);
+		frame.add(buttonReanalyze);
 		frame.setJMenuBar(menu);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	}
-
-	public void pastebin() {
-		if (!SPAMDETECT && !Output.isEmpty()) {
-			SPAMDETECT = true;
-			AnalysisResult result = analyzePartOne();
-			Output = "Recorded by MinecraftError (https://github.com/medsouz/MinecraftError).\n\nAutomatic analysis: "
-					+ result.getMessage() + "\n" + Output;
-			textBox.setText(textBox.getText()
-					+ "\nPosting to pastebin.com...\n");
-
-			// Build parameter string
-			String data = "api_dev_key=00ee7bd5d711b33ec4c1386b32f8e945&api_option=paste&api_paste_code="
-					+ Output;
-			try {
-				// Send the request
-				URL url = new URL("http://pastebin.com/api/api_post.php");
-				URLConnection conn = url.openConnection();
-				conn.setDoOutput(true);
-				OutputStreamWriter writer = new OutputStreamWriter(
-						conn.getOutputStream());
-
-				// write parameters
-				writer.write(data);
-				writer.flush();
-
-				// Get the response
-				StringBuilder answer = new StringBuilder();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(conn.getInputStream()));
-				String line;
-				while ((line = reader.readLine()) != null) {
-					answer.append(line);
-				}
-				writer.close();
-				reader.close();
-
-				// Output the URL
-				textBox.append(answer.toString() + "\n");
-
-			} catch (MalformedURLException ex) {
-				ex.printStackTrace();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-		} else {
-			if (Output.isEmpty()) {
-				textBox.append("It appears that there was no output, this can be caused if you still have Minecraft open when you pressed \"Paste Error\". Try closing Minecraft then try again.\n");
-			}
-			if (SPAMDETECT) {
-				textBox.append("Whoa! Calm down, it appears that you pressed \"Paste Error\" too many times! Please only press it once and then wait for the link to the pastebin to pop up. Thank you.\n");
-			}
-		}
-	}
-
-	public String getMinecraftPath() {
-		if (currentOS == null)
-			currentOS = OSType.getOS();
-		if (!customPath.isEmpty()) {
-			return customPath;
-		}
-		if (currentOS.isMac()) {
-			System.out.println("Mac user!");
-			return System.getProperty("user.home")
-					+ "/Library/Application\\ Support/minecraft/";
-		}
-		if (currentOS.isLinux()) {
-			System.out.println("Linux/Unix/Solaris user!");
-			return System.getProperty("user.home") + "/.minecraft/";
-		}
-		if (currentOS.isWindows()) {
-			System.out.println("Windows user!");
-			return System.getenv("APPDATA") + "/.minecraft/";
-		}
-		throw new RuntimeException("Unknown OS!");
-	}
-
-	public void pasteModLoaderOutput() {
-		String modLoaderPath = getMinecraftPath() + "ModLoader.txt";
-		String contents = "Recorded by MinecraftError v2.4 (https://github.com/medsouz/MinecraftError):\n";
-		try {
-			byte[] b = new byte[(int) new File(modLoaderPath).length()];
-			BufferedInputStream f = new BufferedInputStream(
-					new FileInputStream(modLoaderPath));
-			f.read(b);
-			contents = contents + new String(b);
-			f.close();
-			// one last check to make sure everything worked
-			if (modLoaderPath.equals("") || contents.equals("")) {
-				System.out.println("failed");
-				// ** TODO: popup box, maybe?
-				return;
-			}
-			URL url = new URL("http://pastebin.com/api/api_post.php");
-			URLConnection conn = url.openConnection();
-			conn.setDoOutput(true);
-			OutputStreamWriter writer = new OutputStreamWriter(
-					conn.getOutputStream());
-			writer.write("api_dev_key=00ee7bd5d711b33ec4c1386b32f8e945&api_option=paste&api_paste_code="
-					+ contents);
-			writer.flush();
-			StringBuilder answer = new StringBuilder();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					conn.getInputStream()));
-			String line;
-			while ((line = reader.readLine()) != null) {
-				answer.append(line);
-			}
-			writer.close();
-			reader.close();
-			textBox.append("\n" + answer.toString() + "\n");
-		} catch (Exception Err) {
-			System.out.println(Err.getMessage());
-			return;
-		}
 	}
 
 	public void analyze() {
@@ -530,7 +412,8 @@ public class Main {
 				textBox.append("\n\nHere's my guess as to what went wrong:\n\n"
 						+ result.getMessage());
 			} else {
-				textBox.append("\n\nWell that one was easy.\n\n" + result.getMessage());
+				textBox.append("\n\nWell that one was easy.\n\n"
+						+ result.getMessage());
 			}
 		} else {
 			if (Output.isEmpty()) {
@@ -687,6 +570,121 @@ public class Main {
 		if (unknown || analysis.isEmpty()) {
 			analysis = "Hm, I can't seem to figure it out. If your client failed to load press Paste Error and show that link to #Risucraft on esper.net";
 		}
-		return new AnalysisResult(analysis,sillyMistake);
+		return new AnalysisResult(analysis, sillyMistake);
+	}
+
+	public String getMinecraftPath() {
+		if (currentOS == null)
+			currentOS = OSType.getOS();
+		if (!customMcPath.isEmpty()) {
+			return customMcPath;
+		}
+		if (currentOS.isMac()) {
+			System.out.println("Mac user!");
+			return System.getProperty("user.home")
+					+ "/Library/Application\\ Support/minecraft/";
+		}
+		if (currentOS.isLinux()) {
+			System.out.println("Linux/Unix/Solaris user!");
+			return System.getProperty("user.home") + "/.minecraft/";
+		}
+		if (currentOS.isWindows()) {
+			System.out.println("Windows user!");
+			return System.getenv("APPDATA") + "/.minecraft/";
+		}
+		throw new RuntimeException("Unknown OS!");
+	}
+
+	public void pastebin() {
+		if (!SPAMDETECT && !Output.isEmpty()) {
+			SPAMDETECT = true;
+			AnalysisResult result = analyzePartOne();
+			Output = "Recorded by MinecraftError (https://github.com/medsouz/MinecraftError).\n\nAutomatic analysis: "
+					+ result.getMessage() + "\n" + Output;
+			textBox.setText(textBox.getText()
+					+ "\nPosting to pastebin.com...\n");
+
+			// Build parameter string
+			String data = "api_dev_key=00ee7bd5d711b33ec4c1386b32f8e945&api_option=paste&api_paste_code="
+					+ Output;
+			try {
+				// Send the request
+				URL url = new URL("http://pastebin.com/api/api_post.php");
+				URLConnection conn = url.openConnection();
+				conn.setDoOutput(true);
+				OutputStreamWriter writer = new OutputStreamWriter(
+						conn.getOutputStream());
+
+				// write parameters
+				writer.write(data);
+				writer.flush();
+
+				// Get the response
+				StringBuilder answer = new StringBuilder();
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(conn.getInputStream()));
+				String line;
+				while ((line = reader.readLine()) != null) {
+					answer.append(line);
+				}
+				writer.close();
+				reader.close();
+
+				// Output the URL
+				textBox.append(answer.toString() + "\n");
+
+			} catch (MalformedURLException ex) {
+				ex.printStackTrace();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		} else {
+			if (Output.isEmpty()) {
+				textBox.append("It appears that there was no output, this can be caused if you still have Minecraft open when you pressed \"Paste Error\". Try closing Minecraft then try again.\n");
+			}
+			if (SPAMDETECT) {
+				textBox.append("Whoa! Calm down, it appears that you pressed \"Paste Error\" too many times! Please only press it once and then wait for the link to the pastebin to pop up. Thank you.\n");
+			}
+		}
+	}
+
+	public void pasteModLoaderOutput() {
+		String modLoaderPath = getMinecraftPath() + "ModLoader.txt";
+		String contents = "Recorded by MinecraftError v2.4 (https://github.com/medsouz/MinecraftError):\n";
+		try {
+			byte[] b = new byte[(int) new File(modLoaderPath).length()];
+			BufferedInputStream f = new BufferedInputStream(
+					new FileInputStream(modLoaderPath));
+			f.read(b);
+			contents = contents + new String(b);
+			f.close();
+			// one last check to make sure everything worked
+			if (modLoaderPath.equals("") || contents.equals("")) {
+				System.out.println("failed");
+				// ** TODO: popup box, maybe?
+				return;
+			}
+			URL url = new URL("http://pastebin.com/api/api_post.php");
+			URLConnection conn = url.openConnection();
+			conn.setDoOutput(true);
+			OutputStreamWriter writer = new OutputStreamWriter(
+					conn.getOutputStream());
+			writer.write("api_dev_key=00ee7bd5d711b33ec4c1386b32f8e945&api_option=paste&api_paste_code="
+					+ contents);
+			writer.flush();
+			StringBuilder answer = new StringBuilder();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					conn.getInputStream()));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				answer.append(line);
+			}
+			writer.close();
+			reader.close();
+			textBox.append("\n" + answer.toString() + "\n");
+		} catch (Exception Err) {
+			System.out.println(Err.getMessage());
+			return;
+		}
 	}
 }
