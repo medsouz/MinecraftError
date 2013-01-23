@@ -411,9 +411,9 @@ public class Main {
 	public void pastebin() {
 		if (!SPAMDETECT && !Output.isEmpty()) {
 			SPAMDETECT = true;
-			analyzePartOne();
+			AnalysisResult result = analyzePartOne();
 			Output = "Recorded by MinecraftError (https://github.com/medsouz/MinecraftError).\n\nAutomatic analysis: "
-					+ analysis + "\n" + Output;
+					+ result.getMessage() + "\n" + Output;
 			textBox.setText(textBox.getText()
 					+ "\nPosting to pastebin.com...\n");
 
