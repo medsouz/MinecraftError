@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URL;
 
 public class ExecOutput implements Runnable {
@@ -22,12 +24,13 @@ public class ExecOutput implements Runnable {
 	@Override
 	public void run() {
 		String output = "";
+		
 		// Get launcher jar
-		File Launcher = new File(mcopy.getMinecraftPath() + "minecrafterr.jar");
+		File launcher = mcopy.getLauncher();
 		jTextArea1
-				.setText("Checking for Minecraft launcher (minecrafterr.jar) in "
-						+ Launcher.getAbsolutePath() + "\n");
-		if (!Launcher.exists()) {
+				.setText("Checking for Minecraft launcher (minecrafterr.jar) at "
+						+ launcher.getAbsolutePath() + "\n");
+		if (!launcher.exists()) {
 			jTextArea1.append("Error: Could not find launcher!\n");
 			jTextArea1.append("Downloading from Minecraft.net...\n");
 			try {
@@ -35,8 +38,7 @@ public class ExecOutput implements Runnable {
 						new URL(
 								"https://s3.amazonaws.com/MinecraftDownload/launcher/minecraft.jar")
 								.openStream());
-				FileOutputStream fos = new FileOutputStream(
-						mcopy.getMinecraftPath() + "minecrafterr.jar");
+				FileOutputStream fos = new FileOutputStream(mcopy.getLauncher());
 				BufferedOutputStream bout = new BufferedOutputStream(fos, 1024);
 				byte data[] = new byte[1024];
 				int x = 0;
@@ -47,40 +49,45 @@ public class ExecOutput implements Runnable {
 				in.close();
 			} catch (IOException e) {
 				jTextArea1.append("Download failed...\n");
+				jTextArea1.append("Minecraft launch cancelled. Details:\n");
+				// XXX This is the fastest way to get the exception stack trace
+				// to a string
+				StringWriter sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				jTextArea1.append(sw.toString());
+				return;
 			}
 			jTextArea1.append("Download successful!\n");
 		}
+		
 		// Got launcher.
 		jTextArea1.append("Minecraft launcher found!\n");
 		jTextArea1.append("Starting launcher...\n");
 		try {
-			output = output
-					+ "-------------Contents of mods folder:-------------"
-					+ "\n";
-			jTextArea1
-					.append("-------------Contents of mods folder:-------------"
-							+ "\n");
-			output = output
-					+ modsFolderContents(mcopy.getMinecraftPath() + "/mods")
-					+ "\n";
-			jTextArea1.append(modsFolderContents(mcopy.getMinecraftPath()
-					+ "/mods")
-					+ "\n");
-			output = output
-					+ "--------------------------------------------------"
-					+ "\n";
-			jTextArea1
-					.append("--------------------------------------------------"
-							+ "\n");
-			System.out.println(System.getProperty("os.name"));
+			// Print mods folder contents
+			StringBuilder SBmodsfolder = new StringBuilder(
+					"-------------Contents of mods folder:-------------");
+			SBmodsfolder.append("\nMods:\n");
+			SBmodsfolder.append(modsFolderContents(mcopy
+					.getMinecraftPath(false) + "/mods"));
+			if (new File(mcopy.getMinecraftPath(false) + "/coremods").exists()) {
+				SBmodsfolder.append("\nForge Coremods:\n");
+				SBmodsfolder.append(modsFolderContents(mcopy
+						.getMinecraftPath(false) + "/coremods"));
+			}
+			SBmodsfolder
+					.append("\n--------------------------------------------------\n");
+			jTextArea1.append(SBmodsfolder.toString());
+			output = SBmodsfolder.toString();
+			
+			//System.out.println(System.getProperty("os.name")); // what was this for anyways?
+			
 			// Run launcher in new process
-			// Process pr =
-			// Runtime.getRuntime().exec(System.getProperty("java.home")+"/bin/java -Ddebug=full -cp "+mcopy.getMinecraftPath()+"minecrafterr.jar net.minecraft.LauncherFrame");
 			Process pr = Runtime.getRuntime().exec(
 					new String[] {
 							System.getProperty("java.home") + "/bin/java",
 							"-Ddebug=full", "-cp",
-							mcopy.getMinecraftPath() + "minecrafterr.jar",
+							mcopy.getLauncher().toString(),
 							"net.minecraft.LauncherFrame" });
 			// Grab output
 			BufferedReader out = new BufferedReader(new InputStreamReader(
@@ -94,8 +101,8 @@ public class ExecOutput implements Runnable {
 				if (line.contains("Setting user: ")) {
 					line = "[MCError: Session ID censored]";
 					/*
-					 * don't show the session id (can be used to temporarily hijack
-					 * accounts and join servers with that user)
+					 * don't show the session id (can be used to temporarily
+					 * hijack accounts and join servers with that user)
 					 */
 				}
 				output = output + line + "\n";
@@ -115,49 +122,47 @@ public class ExecOutput implements Runnable {
 		mcopy.autoAnalyze(output); // Auto-analyze
 	}
 
-	public String modsFolderContents(String path) {
-		String contents = "";
+	public StringBuilder modsFolderContents(String path) {
+		StringBuilder contents = new StringBuilder();
 		File folder = new File(path);
+		boolean docomma = false;
 		for (int i = 0; i < folder.listFiles().length; i++) {
 			File f = folder.listFiles()[i];
 			if (f.isDirectory()) {
-				if (!contents.equals("")) {
-					contents = contents + ", " + getDirContents(f, f.getName());// new
-																				// method
-																				// for
-																				// recursion
-				} else {
-					contents = getDirContents(f, f.getName());
+				if (docomma) {
+					contents.append(", ");
 				}
+				contents.append(getDirContents(f, f.getName()));
+				docomma = true;
 			} else {
-				if (!contents.equals("")) {
-					contents = contents + ", " + f.getName();
-				} else {
-					contents = f.getName();
+				if (docomma) {
+					contents.append(", ");
 				}
+				contents.append(f.getName());
+				docomma = true;
 			}
 
 		}
 		return contents;
 	}
 
-	private String getDirContents(File dir, String path) {
-		String contents = "";
+	private StringBuilder getDirContents(File dir, String path) {
+		StringBuilder contents = new StringBuilder();
+		boolean docomma = false;
 		for (int i = 0; i < dir.listFiles().length; i++) {
 			File f = dir.listFiles()[i];
 			if (f.isDirectory()) {
-				if (!contents.equals("")) {
-					contents = contents + ", "
-							+ getDirContents(f, path + "/" + f.getName());
-				} else {
-					contents = getDirContents(f, path + "/" + f.getName());
+				if (docomma) {
+					contents.append(", ");
 				}
+				contents.append(getDirContents(f, path + "/" + f.getName()));
+				docomma = true;
 			} else {
-				if (!contents.equals("")) {
-					contents = contents + ", " + path + "/" + f.getName();
-				} else {
-					contents = path + "/" + f.getName();
+				if (docomma) {
+					contents.append(", ");
 				}
+				contents.append(path).append("/").append(f.getName());
+				docomma = true;
 			}
 		}
 		return contents;

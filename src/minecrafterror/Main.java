@@ -24,8 +24,10 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.DefaultCaret;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -123,8 +125,11 @@ public class Main {
 	public OSType currentOS;
 	public Main instance;
 
+	@Deprecated
 	public String customMcPath = "";
-	static String Output = "";
+	public static File launcher;
+	public static File mcPath;
+	public static String Output = "";
 	static volatile boolean SPAMDETECT = false;
 
 	public ArrayList<IErrorAnalyzer> analyzers = new ArrayList<IErrorAnalyzer>();
@@ -132,6 +137,9 @@ public class Main {
 	public Main() {
 		instance = this;
 		currentOS = OSType.getOS();
+
+		launcher = new File(getMinecraftPath(true), "minecrafterr.jar");
+		mcPath = getMinecraftPath(true);
 
 		InputStream in = getClass().getResourceAsStream(
 				"/minecrafterror/resources/VolterGoldfish.ttf");
@@ -203,7 +211,7 @@ public class Main {
 			public void mousePressed(MouseEvent me) {
 				if (buttonPaste.isEnabled() == true) {
 					buttonPaste.setIcon(iconButton3);
-					pastebin();
+					instance.pastebin();
 					// Sound.CLICK.play();
 				}
 			}
@@ -292,34 +300,86 @@ public class Main {
 			}
 		});
 
-		JMenuItem Paste = new JMenuItem("Paste Error", iconCopy);
-		File.add(Paste);
+		JMenuItem menuPaste = new JMenuItem("Paste Error", iconCopy);
+		File.add(menuPaste);
 
-		JMenuItem FolderChange = new JMenuItem("Change Launcher", iconOptions);
-		File.add(FolderChange);
-		FolderChange.addMouseListener(new MouseAdapter() {
+		JMenuItem menuChangeLauncher = new JMenuItem("Change Launcher", iconOptions);
+		File.add(menuChangeLauncher);
+		menuChangeLauncher.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent me) {
-				String newpath = JOptionPane
-						.showInputDialog(
-								frame,
-								"Enter the new launcher path. Leave empty for default.\nNote: MCError does not work with some custom launchers.",
-								getMinecraftPath());
-				if (newpath == null || newpath.isEmpty()) {
-					customMcPath = "";
-					return;
+				final JFileChooser chooser = new JFileChooser();
+				final FileNameExtensionFilter filter = new FileNameExtensionFilter(
+						"Executable JAR file", "jar");
+				chooser.setFileFilter(filter);
+				chooser.setDialogTitle("Choose a Minecraft launcher");
+				chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				chooser.setMultiSelectionEnabled(false);
+				chooser.setSelectedFile(getLauncher(true));
+
+				int returnVal = chooser.showOpenDialog(frame);
+				switch (returnVal) {
+				case JFileChooser.APPROVE_OPTION:
+					// Set custom launcher
+					launcher = chooser.getSelectedFile();
+					break;
+				case JFileChooser.CANCEL_OPTION:
+				case JFileChooser.ERROR_OPTION:
+					// Ask to reset custom launcher
+					int response = JOptionPane.showOptionDialog(frame,
+							"Reset launcher?",
+							"Do you want to reset the launcher path to\n"
+									+ "the default?\n",
+							JOptionPane.QUESTION_MESSAGE,
+							JOptionPane.YES_NO_OPTION, null, new String[] {
+									"Reset", "Don't Reset" }, "Don't Reset");
+					switch (response) {
+					case 0:
+						resetLauncher();
+						break;
+					case 1:
+						break;
+					}
+					break;
 				}
-				File testf = new File(newpath);
-				if (testf.exists() && testf.isFile()) {
-					customMcPath = newpath;
-				} else if (!testf.isFile()) {
-					JOptionPane.showMessageDialog(frame,
-							"The path given is not a file.", "Error",
-							JOptionPane.WARNING_MESSAGE);
-				} else {
-					JOptionPane.showMessageDialog(frame,
-							"The path given does not exist.", "Error",
-							JOptionPane.WARNING_MESSAGE);
+			}
+		});
+		
+		JMenuItem menuChangePath = new JMenuItem("Change Minecraft directory", iconOptions);
+		File.add(menuChangePath);
+		menuChangePath.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent me) {
+				final JFileChooser chooser = new JFileChooser();
+				chooser.setDialogTitle("Choose a Minecraft launcher");
+				chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				chooser.setMultiSelectionEnabled(false);
+				chooser.setSelectedFile(getMinecraftPath(true));
+
+				int returnVal = chooser.showOpenDialog(frame);
+				switch (returnVal) {
+				case JFileChooser.APPROVE_OPTION:
+					// Set custom launcher
+					mcPath = chooser.getSelectedFile();
+					break;
+				case JFileChooser.CANCEL_OPTION:
+				case JFileChooser.ERROR_OPTION:
+					// Ask to reset custom launcher
+					int response = JOptionPane.showOptionDialog(frame,
+							"Reset path?",
+							"Do you want to reset the Minecraft folder\n" +
+							"path to the default?\n",
+							JOptionPane.QUESTION_MESSAGE,
+							JOptionPane.YES_NO_OPTION, null, new String[] {
+									"Reset", "Don't Reset" }, "Don't Reset");
+					switch (response) {
+					case 0:
+						resetMinecraftPath();
+						break;
+					case 1:
+						break;
+					}
+					break;
 				}
 			}
 		});
@@ -565,29 +625,81 @@ public class Main {
 		textBox.append("\n\n");
 		textBox.append(result.getMessage());
 		textBox.append("\n");
-		textBox.setCaretPosition(textBox.getText().length()-1);
+		textBox.setCaretPosition(textBox.getText().length() - 1);
 	}
 
-	public String getMinecraftPath() {
+	/**
+	 * Gets the path to theMinecraft launcher. May not exist yet.
+	 * 
+	 * @return Path to launcher .jar file
+	 */
+	public File getLauncher() {
+		return getLauncher(false);
+	}
+
+	/**
+	 * Gets the path to theMinecraft launcher. May not exist yet.
+	 * 
+	 * @return Path to launcher .jar file
+	 */
+	public File getLauncher(boolean defaultOnly) {
+		if (launcher != null) {
+			return launcher;
+		} else {
+			resetLauncher();
+			return launcher;
+		}
+	}
+
+	/**
+	 * Reset the launcher file to the default.
+	 */
+	public void resetLauncher() {
+		launcher = new File(getMinecraftPath(false), "minecrafterr.jar");
+	}
+
+	/**
+	 * Get default path to the Minecraft folder on this system.
+	 * 
+	 * @return Directory for Minecraft
+	 */
+	public File getMinecraftPath() {
+		return getMinecraftPath(false);
+	}
+
+	/**
+	 * Get default path to the Minecraft folder on this system.
+	 * 
+	 * @param defaultOnly
+	 *            Do not return a custom path
+	 * @return Directory for Minecraft
+	 */
+	public File getMinecraftPath(boolean defaultOnly) {
 		if (currentOS == null)
 			currentOS = OSType.getOS();
-		if (!customMcPath.isEmpty()) {
-			return customMcPath;
-		}
+		if ((!defaultOnly) && (mcPath != null))
+			return mcPath;
 		if (currentOS.isMac()) {
 			System.out.println("Mac user!");
-			return System.getProperty("user.home")
-					+ "/Library/Application\\ Support/minecraft/";
+			return new File(System.getProperty("user.home"),
+					"/Library/Application\\ Support/minecraft");
 		}
 		if (currentOS.isLinux()) {
 			System.out.println("Linux/Unix/Solaris user!");
-			return System.getProperty("user.home") + "/.minecraft/";
+			return new File(System.getProperty("user.home"), "/.minecraft");
 		}
 		if (currentOS.isWindows()) {
 			System.out.println("Windows user!");
-			return System.getenv("APPDATA") + "/.minecraft/";
+			return new File(System.getenv("APPDATA"), "/.minecraft/");
 		}
 		throw new RuntimeException("Unknown OS!");
+	}
+
+	/**
+	 * Reset the Minecraft path to the default.
+	 */
+	public void resetMinecraftPath() {
+		mcPath = getMinecraftPath(true);
 	}
 
 	public void pastebin() {
@@ -655,7 +767,7 @@ public class Main {
 	}
 
 	public void pasteModLoaderOutput() {
-		String modLoaderPath = getMinecraftPath() + "ModLoader.txt";
+		String modLoaderPath = getMinecraftPath(false) + "ModLoader.txt";
 		String contents = "Recorded by MinecraftError v2.4 (https://github.com/medsouz/MinecraftError):\n";
 		try {
 			byte[] b = new byte[(int) new File(modLoaderPath).length()];
