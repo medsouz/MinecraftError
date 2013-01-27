@@ -93,7 +93,8 @@ public class ExecOutput implements Runnable {
 			Process pr = pbuild.start();
 
 			// Grab output
-			// Note that STDERR has been redirected to STDOUT by the ProcessBuilder
+			// Note that STDERR has been redirected to STDOUT by the
+			// ProcessBuilder
 			// Despite the name of "input stream", this is the STDOUT.
 			BufferedReader out = new BufferedReader(new InputStreamReader(
 					pr.getInputStream()));
