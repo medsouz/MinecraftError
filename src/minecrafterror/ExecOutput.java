@@ -80,8 +80,6 @@ public class ExecOutput implements Runnable {
 			jTextArea1.append(SBmodsfolder.toString());
 			output = SBmodsfolder.toString();
 			
-			//System.out.println(System.getProperty("os.name")); // what was this for anyways?
-			
 			// Run launcher in new process
 			Process pr = Runtime.getRuntime().exec(
 					new String[] {
