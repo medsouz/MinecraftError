@@ -70,14 +70,14 @@ public class ExecOutput implements Runnable {
 		try {
 			// Print mods folder contents
 			StringBuilder SBmodsfolder = new StringBuilder(
-					"-------------Contents of mods folder:-------------");
-			SBmodsfolder.append("\nMods:\n");
-			SBmodsfolder.append(modsFolderContents(mcopy
-					.getMinecraftPath() + "/mods"));
+					"-------------Contents of mods folder:-------------\n");
+			SBmodsfolder.append(modsFolderContents(mcopy.getMinecraftPath()
+					+ "/mods"));
 			if (new File(mcopy.getMinecraftPath() + "/coremods").exists()) {
-				SBmodsfolder.append("Forge Coremods:\n");
-				SBmodsfolder.append(modsFolderContents(mcopy
-						.getMinecraftPath() + "/coremods"));
+				SBmodsfolder
+						.append("-----------Contents of coremods folder:-----------\n");
+				SBmodsfolder.append(modsFolderContents(mcopy.getMinecraftPath()
+						+ "/coremods"));
 			}
 			SBmodsfolder
 					.append("--------------------------------------------------\n");
@@ -144,9 +144,11 @@ public class ExecOutput implements Runnable {
 		for (int i = 0; i < dir.listFiles().length; i++) {
 			File f = dir.listFiles()[i];
 			if (f.isDirectory()) {
-				contents.append(getDirContents(f, path + "/" + f.getName())).append('\n');
+				contents.append(getDirContents(f, path + "/" + f.getName()))
+						.append('\n');
 			} else {
-				contents.append(path).append("/").append(f.getName()).append('\n');
+				contents.append(path).append("/").append(f.getName())
+						.append('\n');
 			}
 		}
 		return contents;
