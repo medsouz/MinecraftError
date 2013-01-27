@@ -305,7 +305,7 @@ public class Main {
 								frame,
 								"Enter the new launcher path. Leave empty for default.\nNote: MCError does not work with some custom launchers.",
 								getMinecraftPath());
-				if (newpath.isEmpty()) {
+				if (newpath == null || newpath.isEmpty()) {
 					customMcPath = "";
 					return;
 				}
