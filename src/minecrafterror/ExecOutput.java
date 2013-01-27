@@ -28,10 +28,8 @@ public class ExecOutput implements Runnable {
 				.setText("Checking for Minecraft launcher (minecrafterr.jar) in "
 						+ Launcher.getAbsolutePath() + "\n");
 		if (!Launcher.exists()) {
-			jTextArea1.setText(jTextArea1.getText()
-					+ "Error: Could not find launcher!\n");
-			jTextArea1.setText(jTextArea1.getText()
-					+ "Downloading from Minecraft.net...\n");
+			jTextArea1.append("Error: Could not find launcher!\n");
+			jTextArea1.append("Downloading from Minecraft.net...\n");
 			try {
 				BufferedInputStream in = new BufferedInputStream(
 						new URL(
@@ -48,36 +46,32 @@ public class ExecOutput implements Runnable {
 				bout.close();
 				in.close();
 			} catch (IOException e) {
-				jTextArea1.setText(jTextArea1.getText() + "Download failed..."
-						+ "\n");
+				jTextArea1.append("Download failed...\n");
 			}
-			jTextArea1.setText(jTextArea1.getText() + "Download successful!"
-					+ "\n");
+			jTextArea1.append("Download successful!\n");
 		}
 		// Got launcher.
-		jTextArea1.setText(jTextArea1.getText() + "Minecraft launcher found!"
-				+ "\n");
-		jTextArea1
-				.setText(jTextArea1.getText() + "Starting launcher..." + "\n");
+		jTextArea1.append("Minecraft launcher found!\n");
+		jTextArea1.append("Starting launcher...\n");
 		try {
 			output = output
 					+ "-------------Contents of mods folder:-------------"
 					+ "\n";
-			jTextArea1.setText(jTextArea1.getText()
-					+ "-------------Contents of mods folder:-------------"
-					+ "\n");
+			jTextArea1
+					.append("-------------Contents of mods folder:-------------"
+							+ "\n");
 			output = output
 					+ modsFolderContents(mcopy.getMinecraftPath() + "/mods")
 					+ "\n";
-			jTextArea1.setText(jTextArea1.getText()
-					+ modsFolderContents(mcopy.getMinecraftPath() + "/mods")
+			jTextArea1.append(modsFolderContents(mcopy.getMinecraftPath()
+					+ "/mods")
 					+ "\n");
 			output = output
 					+ "--------------------------------------------------"
 					+ "\n";
-			jTextArea1.setText(jTextArea1.getText()
-					+ "--------------------------------------------------"
-					+ "\n");
+			jTextArea1
+					.append("--------------------------------------------------"
+							+ "\n");
 			System.out.println(System.getProperty("os.name"));
 			// Run launcher in new process
 			// Process pr =
@@ -109,12 +103,14 @@ public class ExecOutput implements Runnable {
 				jTextArea1.setCaretPosition(jTextArea1.getText().length() - 1);
 			}
 		} catch (IOException e) {
-			jTextArea1.append("[MCError: An exception has occured while retrieving Minecraft's output.]\n" + e.getMessage() + "\n");
+			jTextArea1
+					.append("[MCError: An exception has occured while retrieving Minecraft's output.]\n"
+							+ e.getMessage() + "\n");
 			jTextArea1.setCaretPosition(jTextArea1.getText().length() - 1);
 		}
 		// set output
 		Main.SPAMDETECT = false;
-		jTextArea1.setText(jTextArea1.getText() + "Error report complete.");
+		jTextArea1.append("Error report complete.");
 		jTextArea1.setCaretPosition(jTextArea1.getText().length() - 1);
 		mcopy.autoAnalyze(output); // Auto-analyze
 	}
