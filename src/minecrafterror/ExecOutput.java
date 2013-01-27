@@ -127,21 +127,12 @@ public class ExecOutput implements Runnable {
 	public StringBuilder modsFolderContents(String path) {
 		StringBuilder contents = new StringBuilder();
 		File folder = new File(path);
-		boolean docomma = false;
 		for (int i = 0; i < folder.listFiles().length; i++) {
 			File f = folder.listFiles()[i];
 			if (f.isDirectory()) {
-				if (docomma) {
-					contents.append(", ");
-				}
-				contents.append(getDirContents(f, f.getName()));
-				docomma = true;
+				contents.append(getDirContents(f, f.getName())).append('\n');
 			} else {
-				if (docomma) {
-					contents.append(", ");
-				}
-				contents.append(f.getName());
-				docomma = true;
+				contents.append(f.getName()).append('\n');
 			}
 
 		}
@@ -150,21 +141,12 @@ public class ExecOutput implements Runnable {
 
 	private StringBuilder getDirContents(File dir, String path) {
 		StringBuilder contents = new StringBuilder();
-		boolean docomma = false;
 		for (int i = 0; i < dir.listFiles().length; i++) {
 			File f = dir.listFiles()[i];
 			if (f.isDirectory()) {
-				if (docomma) {
-					contents.append(", ");
-				}
-				contents.append(getDirContents(f, path + "/" + f.getName()));
-				docomma = true;
+				contents.append(getDirContents(f, path + "/" + f.getName())).append('\n');
 			} else {
-				if (docomma) {
-					contents.append(", ");
-				}
-				contents.append(path).append("/").append(f.getName());
-				docomma = true;
+				contents.append(path).append("/").append(f.getName()).append('\n');
 			}
 		}
 		return contents;
