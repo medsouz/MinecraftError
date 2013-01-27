@@ -15,16 +15,20 @@ public class ExecOutput implements Runnable {
 
 	private javax.swing.JTextArea jTextArea1;
 	private Main mcopy;
+	private ProcessBuilder pbuild;
 
 	public ExecOutput(javax.swing.JTextArea Output, Main m) {
 		jTextArea1 = Output;
 		mcopy = m;
+		pbuild = new ProcessBuilder();
+		// Redirects STDERR to STDIN for Forge
+		pbuild.redirectErrorStream(true);
 	}
 
 	@Override
 	public void run() {
 		String output = "";
-		
+
 		// Get launcher jar
 		File launcher = mcopy.getLauncher();
 		jTextArea1
@@ -69,33 +73,33 @@ public class ExecOutput implements Runnable {
 					"-------------Contents of mods folder:-------------");
 			SBmodsfolder.append("\nMods:\n");
 			SBmodsfolder.append(modsFolderContents(mcopy
-					.getMinecraftPath(false) + "/mods"));
-			if (new File(mcopy.getMinecraftPath(false) + "/coremods").exists()) {
-				SBmodsfolder.append("\nForge Coremods:\n");
+					.getMinecraftPath() + "/mods"));
+			if (new File(mcopy.getMinecraftPath() + "/coremods").exists()) {
+				SBmodsfolder.append("Forge Coremods:\n");
 				SBmodsfolder.append(modsFolderContents(mcopy
-						.getMinecraftPath(false) + "/coremods"));
+						.getMinecraftPath() + "/coremods"));
 			}
 			SBmodsfolder
-					.append("\n--------------------------------------------------\n");
+					.append("--------------------------------------------------\n");
 			jTextArea1.append(SBmodsfolder.toString());
 			output = SBmodsfolder.toString();
-			
+
 			// Run launcher in new process
-			Process pr = Runtime.getRuntime().exec(
-					new String[] {
-							System.getProperty("java.home") + "/bin/java",
-							"-Ddebug=full", "-cp",
-							mcopy.getLauncher().toString(),
-							"net.minecraft.LauncherFrame" });
+			// Process pr = Runtime.getRuntime().exec(
+			pbuild.command(System.getProperty("java.home") + "/bin/java",
+					"-Ddebug=full", "-cp", mcopy.getLauncher().toString(),
+					"net.minecraft.LauncherFrame");
+			pbuild.directory(mcopy.getMinecraftPath());
+			Process pr = pbuild.start();
+
 			// Grab output
+			// Note that STDERR has been redirected to STDOUT by the ProcessBuilder
+			// Despite the name of "input stream", this is the STDOUT.
 			BufferedReader out = new BufferedReader(new InputStreamReader(
 					pr.getInputStream()));
-			BufferedReader outERR = new BufferedReader(new InputStreamReader(
-					pr.getErrorStream()));
 			String line = "";
-			// TODO: Grab only stderr when Forge is going
-			while ((line = out.readLine()) != null
-					|| (line = outERR.readLine()) != null) {
+
+			while ((line = out.readLine()) != null) {
 				if (line.contains("Setting user: ")) {
 					line = "[MCError: Session ID censored]";
 					/*
@@ -115,7 +119,7 @@ public class ExecOutput implements Runnable {
 		}
 		// set output
 		Main.SPAMDETECT = false;
-		jTextArea1.append("Error report complete.");
+		jTextArea1.append("\nError report complete.");
 		jTextArea1.setCaretPosition(jTextArea1.getText().length() - 1);
 		mcopy.autoAnalyze(output); // Auto-analyze
 	}
