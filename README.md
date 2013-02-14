@@ -1,6 +1,6 @@
 # Instructions
-1. Download the latest version at https://s3.amazonaws.com/MCError/latest/MCError-latest.jar
-2. For old versions, download at https://s3.amazonaws.com/MCError/MCErrorV##.jar, where ## is the version number (20,23-32 are available).
+1. Download the latest version at [sourceforge.net/projects/minecrafterror/files/latest](https://sourceforge.net/projects/minecrafterror/files/latest/download?source=github)
+2. For old versions, browse the files at [SourceForge](https://sourceforge.net/projects/minecrafterror/files/).
 3. Run MCErrorVxx.jar by double-clicking on it in its folder.
  * If you need to, right-click -> open with -> Java Runtime.
 4. Click "Launch Minecraft" to start Minecraft.
