@@ -129,7 +129,7 @@ public class ExecOutput implements Runnable {
 		for (int i = 0; i < folder.listFiles().length; i++) {
 			File f = folder.listFiles()[i];
 			if (f.isDirectory()) {
-				contents.append(getDirContents(f, f.getName())).append('\n');
+				contents.append(getDirContents(f, f.getName()));
 			} else {
 				contents.append(f.getName()).append('\n');
 			}
@@ -139,12 +139,11 @@ public class ExecOutput implements Runnable {
 	}
 
 	private StringBuilder getDirContents(File dir, String path) {
-		StringBuilder contents = new StringBuilder();
+		StringBuilder contents = new StringBuilder(path + '/').append('\n');
 		for (int i = 0; i < dir.listFiles().length; i++) {
 			File f = dir.listFiles()[i];
 			if (f.isDirectory()) {
-				contents.append(getDirContents(f, path + "/" + f.getName()))
-						.append('\n');
+				contents.append(getDirContents(f, path + "/" + f.getName()));
 			} else {
 				contents.append(path).append("/").append(f.getName())
 						.append('\n');
