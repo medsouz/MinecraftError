@@ -13,13 +13,14 @@ import java.net.URL;
 
 public class ExecOutput implements Runnable {
 
-	private javax.swing.JTextArea jTextArea1;
+	private UI gui;
 	private Main mcopy;
 	private ProcessBuilder pbuild;
 
-	public ExecOutput(javax.swing.JTextArea Output, Main m) {
-		jTextArea1 = Output;
-		mcopy = m;
+	public ExecOutput(UI paramGUI, Main paramMain) {
+		gui = paramGUI;
+		mcopy = paramMain;
+
 		pbuild = new ProcessBuilder();
 		// Redirects STDERR to STDIN for Forge
 		pbuild.redirectErrorStream(true);
@@ -31,12 +32,12 @@ public class ExecOutput implements Runnable {
 
 		// Get launcher jar
 		File launcher = mcopy.getLauncher();
-		jTextArea1
-				.setText("Checking for Minecraft launcher (minecrafterr.jar) at "
-						+ launcher.getAbsolutePath() + "\n");
+		gui.resetTextBox();
+		gui.append("Checking for Minecraft launcher (minecrafterr.jar) at "
+				+ launcher.getAbsolutePath() + "\n");
 		if (!launcher.exists()) {
-			jTextArea1.append("Error: Could not find launcher!\n");
-			jTextArea1.append("Downloading from Minecraft.net...\n");
+			gui.append("Error: Could not find launcher!\n");
+			gui.append("Downloading from Minecraft.net...\n");
 			try {
 				BufferedInputStream in = new BufferedInputStream(
 						new URL(
@@ -52,21 +53,22 @@ public class ExecOutput implements Runnable {
 				bout.close();
 				in.close();
 			} catch (IOException e) {
-				jTextArea1.append("Download failed...\n");
-				jTextArea1.append("Minecraft launch cancelled. Details:\n");
+				gui.append("Download failed...\n");
+				gui.append("Minecraft launch cancelled. Details:\n");
 				// XXX This is the fastest way to get the exception stack trace
 				// to a string
 				StringWriter sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
-				jTextArea1.append(sw.toString());
+				gui.append(sw.toString());
+				gui.fixTextPointer();
 				return;
 			}
-			jTextArea1.append("Download successful!\n");
+			gui.append("Download successful!\n");
 		}
-		
+
 		// Got launcher.
-		jTextArea1.append("Minecraft launcher found!\n");
-		jTextArea1.append("Starting launcher...\n");
+		gui.append("Minecraft launcher found!\n");
+		gui.append("Starting launcher...\n");
 		try {
 			// Print mods folder contents
 			StringBuilder SBmodsfolder = new StringBuilder(
@@ -81,7 +83,7 @@ public class ExecOutput implements Runnable {
 			}
 			SBmodsfolder
 					.append("--------------------------------------------------\n");
-			jTextArea1.append(SBmodsfolder.toString());
+			gui.append(SBmodsfolder.toString());
 			output = SBmodsfolder.toString();
 
 			// Run launcher in new process
@@ -109,19 +111,18 @@ public class ExecOutput implements Runnable {
 					 */
 				}
 				output = output + line + "\n";
-				jTextArea1.append(line + "\n");
-				jTextArea1.setCaretPosition(jTextArea1.getText().length() - 1);
+				gui.append(line + "\n");
+				gui.fixTextPointer();
 			}
 		} catch (IOException e) {
-			jTextArea1
-					.append("[MCError: An exception has occured while retrieving Minecraft's output.]\n"
-							+ e.getMessage() + "\n");
-			jTextArea1.setCaretPosition(jTextArea1.getText().length() - 1);
+			gui.append("[MCError: An exception has occured while retrieving Minecraft's output.]\n"
+					+ e.getMessage() + "\n");
+			gui.fixTextPointer();
 		}
 		// set output
 		Main.SPAMDETECT = false;
-		jTextArea1.append("\nError report complete.");
-		jTextArea1.setCaretPosition(jTextArea1.getText().length() - 1);
+		gui.append("\nError report complete.");
+		gui.fixTextPointer();
 		mcopy.autoAnalyze(output); // Auto-analyze
 	}
 
