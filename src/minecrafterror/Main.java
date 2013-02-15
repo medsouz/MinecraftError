@@ -100,39 +100,8 @@ public class Main {
 	}
 
 	public static void onClickChangeLauncher() {
-		final JFileChooser chooser = new JFileChooser();
-		final FileNameExtensionFilter filter = new FileNameExtensionFilter(
-				"Executable JAR file", "jar");
-		chooser.setFileFilter(filter);
-		chooser.setDialogTitle("Choose a Minecraft launcher");
-		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		chooser.setMultiSelectionEnabled(false);
-		chooser.setSelectedFile(getLauncher(true));
-
-		int returnVal = chooser.showOpenDialog(GuiInstance.frame);
-		switch (returnVal) {
-		case JFileChooser.APPROVE_OPTION:
-			// Set custom launcher
-			launcher = chooser.getSelectedFile();
-			break;
-		case JFileChooser.CANCEL_OPTION:
-		case JFileChooser.ERROR_OPTION:
-			// Ask to reset custom launcher
-			int response = JOptionPane.showOptionDialog(GuiInstance.frame,
-					"Reset launcher?",
-					"Do you want to reset the launcher path to\n"
-							+ "the default?\n", JOptionPane.QUESTION_MESSAGE,
-					JOptionPane.YES_NO_OPTION, null, new String[] { "Reset",
-							"Don't Reset" }, "Don't Reset");
-			switch (response) {
-			case 0:
-				resetLauncher();
-				break;
-			case 1:
-				break;
-			}
-			break;
-		}
+		File retVal = GuiInstance.doChangeLauncherDialog(getLauncher());
+		launcher = retVal;
 	}
 
 	public static void onClickChangePath() {

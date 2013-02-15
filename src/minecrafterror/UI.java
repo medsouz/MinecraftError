@@ -8,11 +8,13 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -22,6 +24,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.DefaultCaret;
 
 public class UI {
@@ -371,5 +374,46 @@ public class UI {
 		frame.setJMenuBar(menu);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+
+	public File doChangeLauncherDialog(File current) {
+		final JFileChooser chooser = new JFileChooser();
+		final FileNameExtensionFilter filter = new FileNameExtensionFilter(
+				"Executable JAR file", "jar");
+		chooser.setFileFilter(filter);
+		chooser.setDialogTitle("Choose a Minecraft launcher");
+		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		chooser.setMultiSelectionEnabled(false);
+		chooser.setSelectedFile(current);
+
+		int returnVal = chooser.showOpenDialog(frame);
+		File newLauncher;
+		switch (returnVal) {
+		case JFileChooser.APPROVE_OPTION:
+			// Set custom launcher
+			newLauncher = chooser.getSelectedFile();
+			break;
+		case JFileChooser.CANCEL_OPTION:
+		case JFileChooser.ERROR_OPTION:
+			// Ask to reset custom launcher
+			int response = JOptionPane.showOptionDialog(frame,
+					"Reset launcher?",
+					"Do you want to reset the launcher path to\n"
+							+ "the default?\n", JOptionPane.QUESTION_MESSAGE,
+					JOptionPane.YES_NO_OPTION, null, new String[] { "Reset",
+							"Don't Reset" }, "Don't Reset");
+			switch (response) {
+			case 0:
+				newLauncher = Main.getLauncher(true);
+				break;
+			default:
+				newLauncher = current;
+				break;
+			}
+			break;
+		default:
+			throw new AssertionError("JFileChooser had unexpected return value");
+		}
+		return newLauncher;
 	}
 }
