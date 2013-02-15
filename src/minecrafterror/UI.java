@@ -274,16 +274,6 @@ public class UI {
 				Main.onClickChangeLauncher();
 			}
 		});
-
-		JMenuItem menuChangePath = new JMenuItem("Change Minecraft directory",
-				iconOptions);
-		File.add(menuChangePath);
-		menuChangePath.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent me) {
-				Main.onClickChangePath();
-			}
-		});
 		File.addSeparator();
 
 		JMenuItem Exit = new JMenuItem("Exit");

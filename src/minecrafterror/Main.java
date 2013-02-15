@@ -104,40 +104,6 @@ public class Main {
 		launcher = retVal;
 	}
 
-	public static void onClickChangePath() {
-		final JFileChooser chooser = new JFileChooser();
-		chooser.setDialogTitle("Choose a Minecraft launcher");
-		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		chooser.setMultiSelectionEnabled(false);
-		chooser.setSelectedFile(getMinecraftPath(true));
-
-		int returnVal = chooser.showOpenDialog(GuiInstance.frame);
-		switch (returnVal) {
-		case JFileChooser.APPROVE_OPTION:
-			// Set custom launcher
-			mcPath = chooser.getSelectedFile();
-			break;
-		case JFileChooser.CANCEL_OPTION:
-		case JFileChooser.ERROR_OPTION:
-			// Ask to reset custom launcher
-			int response = JOptionPane.showOptionDialog(GuiInstance.frame,
-					"Reset path?",
-					"Do you want to reset the Minecraft folder\n"
-							+ "path to the default?\n",
-					JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION,
-					null, new String[] { "Reset", "Don't Reset" },
-					"Don't Reset");
-			switch (response) {
-			case 0:
-				resetMinecraftPath();
-				break;
-			case 1:
-				break;
-			}
-			break;
-		}
-	}
-
 	private void initializeAnalyzers() {
 		analyzers.add(new AnalyzerDefault());
 		// Make sure Default is always first!
