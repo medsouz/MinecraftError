@@ -14,13 +14,10 @@ import java.net.URL;
 public class ExecOutput implements Runnable {
 
 	private UI gui;
-	private Main mcopy;
 	private ProcessBuilder pbuild;
 
 	public ExecOutput(UI paramGUI, Main paramMain) {
 		gui = paramGUI;
-		mcopy = paramMain;
-
 		pbuild = new ProcessBuilder();
 		// Redirects STDERR to STDIN for Forge
 		pbuild.redirectErrorStream(true);
@@ -31,7 +28,7 @@ public class ExecOutput implements Runnable {
 		String output = "";
 
 		// Get launcher jar
-		File launcher = mcopy.getLauncher();
+		File launcher = Main.getLauncher();
 		gui.resetTextBox();
 		gui.append("Checking for Minecraft launcher (minecrafterr.jar) at "
 				+ launcher.getAbsolutePath() + "\n");
@@ -43,7 +40,7 @@ public class ExecOutput implements Runnable {
 						new URL(
 								"https://s3.amazonaws.com/MinecraftDownload/launcher/minecraft.jar")
 								.openStream());
-				FileOutputStream fos = new FileOutputStream(mcopy.getLauncher());
+				FileOutputStream fos = new FileOutputStream(Main.getLauncher());
 				BufferedOutputStream bout = new BufferedOutputStream(fos, 1024);
 				byte data[] = new byte[1024];
 				int x = 0;
@@ -73,12 +70,12 @@ public class ExecOutput implements Runnable {
 			// Print mods folder contents
 			StringBuilder SBmodsfolder = new StringBuilder(
 					"-------------Contents of mods folder:-------------\n");
-			SBmodsfolder.append(modsFolderContents(mcopy.getMinecraftPath()
+			SBmodsfolder.append(modsFolderContents(Main.getMinecraftPath()
 					+ "/mods"));
-			if (new File(mcopy.getMinecraftPath() + "/coremods").exists()) {
+			if (new File(Main.getMinecraftPath() + "/coremods").exists()) {
 				SBmodsfolder
 						.append("-----------Contents of coremods folder:-----------\n");
-				SBmodsfolder.append(modsFolderContents(mcopy.getMinecraftPath()
+				SBmodsfolder.append(modsFolderContents(Main.getMinecraftPath()
 						+ "/coremods"));
 			}
 			SBmodsfolder
@@ -89,9 +86,9 @@ public class ExecOutput implements Runnable {
 			// Run launcher in new process
 			// Process pr = Runtime.getRuntime().exec(
 			pbuild.command(System.getProperty("java.home") + "/bin/java",
-					"-Ddebug=full", "-cp", mcopy.getLauncher().toString(),
+					"-Ddebug=full", "-cp", Main.getLauncher().toString(),
 					"net.minecraft.LauncherFrame");
-			pbuild.directory(mcopy.getMinecraftPath());
+			pbuild.directory(Main.getMinecraftPath());
 			Process pr = pbuild.start();
 
 			// Grab output
@@ -123,7 +120,7 @@ public class ExecOutput implements Runnable {
 		Main.SPAMDETECT = false;
 		gui.append("\nError report complete.");
 		gui.fixTextPointer();
-		mcopy.autoAnalyze(output); // Auto-analyze
+		Main.instance.autoAnalyze(output); // Auto-analyze
 	}
 
 	public StringBuilder modsFolderContents(String path) {
