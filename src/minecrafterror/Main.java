@@ -633,7 +633,7 @@ public class Main {
 	 * 
 	 * @return Path to launcher .jar file
 	 */
-	public File getLauncher() {
+	public static File getLauncher() {
 		return getLauncher(false);
 	}
 
@@ -642,7 +642,7 @@ public class Main {
 	 * 
 	 * @return Path to launcher .jar file
 	 */
-	public File getLauncher(boolean defaultOnly) {
+	public static File getLauncher(boolean defaultOnly) {
 		if (launcher != null) {
 			return launcher;
 		} else {
@@ -654,7 +654,7 @@ public class Main {
 	/**
 	 * Reset the launcher file to the default.
 	 */
-	public void resetLauncher() {
+	public static void resetLauncher() {
 		launcher = new File(getMinecraftPath(false), "minecrafterr.jar");
 	}
 
@@ -663,7 +663,7 @@ public class Main {
 	 * 
 	 * @return Directory for Minecraft
 	 */
-	public File getMinecraftPath() {
+	public static File getMinecraftPath() {
 		return getMinecraftPath(false);
 	}
 
@@ -674,7 +674,7 @@ public class Main {
 	 *            Do not return a custom path
 	 * @return Directory for Minecraft
 	 */
-	public File getMinecraftPath(boolean defaultOnly) {
+	public static File getMinecraftPath(boolean defaultOnly) {
 		if (currentOS == null)
 			currentOS = OSType.getOS();
 		if ((!defaultOnly) && (mcPath != null))
@@ -698,7 +698,7 @@ public class Main {
 	/**
 	 * Reset the Minecraft path to the default.
 	 */
-	public void resetMinecraftPath() {
+	public static void resetMinecraftPath() {
 		mcPath = getMinecraftPath(true);
 	}
 
