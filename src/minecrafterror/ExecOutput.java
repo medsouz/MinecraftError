@@ -25,7 +25,7 @@ public class ExecOutput implements Runnable {
 
 	@Override
 	public void run() {
-		String output = "";
+		StringBuilder output = new StringBuilder();
 
 		// Get launcher jar
 		File launcher = Main.getLauncher();
@@ -81,7 +81,7 @@ public class ExecOutput implements Runnable {
 			SBmodsfolder
 					.append("--------------------------------------------------\n");
 			ui.append(SBmodsfolder.toString());
-			output = SBmodsfolder.toString();
+			output.append(SBmodsfolder);
 
 			// Run launcher in new process
 			// Process pr = Runtime.getRuntime().exec(
@@ -107,7 +107,7 @@ public class ExecOutput implements Runnable {
 					 * hijack accounts and join servers with that user)
 					 */
 				}
-				output = output + line + "\n";
+				output.append(line).append('\n');
 				ui.append(line + "\n");
 				ui.fixTextPointer();
 			}
@@ -118,9 +118,9 @@ public class ExecOutput implements Runnable {
 		}
 		// set output
 		Main.SPAMDETECT = false;
-		Main.instance.autoAnalyze(output); // Auto-analyze
 		ui.append("\nError report complete.");
 		ui.fixTextPointer();
+		Main.instance.autoAnalyze(output.toString()); // Auto-analyze
 	}
 
 	public StringBuilder modsFolderContents(String path) {
