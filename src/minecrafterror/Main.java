@@ -68,7 +68,7 @@ public class Main {
 		instance = this;
 		currentOS = OSType.getOS();
 
-		launcher = new File(getMinecraftPath(true), "minecrafterr.jar");
+		launcher = new File(getMinecraftPath(true), "minecrafterr-new.jar");
 		mcPath = getMinecraftPath(true);
 
 		initializeAnalyzers();

@@ -38,7 +38,7 @@ public class ExecOutput implements Runnable {
 			try {
 				BufferedInputStream in = new BufferedInputStream(
 						new URL(
-								"https://s3.amazonaws.com/MinecraftDownload/launcher/minecraft.jar")
+								"https://s3.amazonaws.com/Minecraft.Download/launcher/Minecraft.jar")
 								.openStream());
 				FileOutputStream fos = new FileOutputStream(Main.getLauncher());
 				BufferedOutputStream bout = new BufferedOutputStream(fos, 1024);
@@ -86,8 +86,7 @@ public class ExecOutput implements Runnable {
 			// Run launcher in new process
 			// Process pr = Runtime.getRuntime().exec(
 			pbuild.command(System.getProperty("java.home") + "/bin/java",
-					"-Ddebug=full", "-cp", Main.getLauncher().toString(),
-					"net.minecraft.LauncherFrame");
+					"-Ddebug=full", "-jar", Main.getLauncher().toString());
 			pbuild.directory(Main.getMinecraftPath());
 			Process pr = pbuild.start();
 
